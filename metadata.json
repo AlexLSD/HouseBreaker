@@ -1,0 +1,6 @@
+{
+  "name": "HouseBreaker",
+  "description": "Elegant arcade-style advantage play platform and practical probability suite for Casino Roulette, Poker, Must-Hit-By Slots, and Kelly bankroll sizing.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
