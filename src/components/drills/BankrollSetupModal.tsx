@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { ArrowLeft, Coins, Flame, ShieldAlert, Sparkles, Trophy, X, Zap } from 'lucide-react';
+import { ArrowLeft, Coins, ShieldAlert, X, Zap } from 'lucide-react';
 import { sounds } from '../../utils/soundEffects';
+import { useLanguage } from '../../i18n/LanguageContext';
 
 interface BankrollSetupModalProps {
   isOpen: boolean;
@@ -17,6 +18,7 @@ export const BankrollSetupModal: React.FC<BankrollSetupModalProps> = ({
   onClose,
   onNavigateTab
 }) => {
+  const { t } = useLanguage();
   const [selectedCredits, setSelectedCredits] = useState<number>(1000);
   const [customInput, setCustomInput] = useState<string>('1000');
 
@@ -57,7 +59,7 @@ export const BankrollSetupModal: React.FC<BankrollSetupModalProps> = ({
               onClose();
             }}
             className="absolute top-4 right-4 p-2 rounded-xl bg-[#141F33] hover:bg-[#1E2F4C] border border-[#2D3F5E] text-slate-400 hover:text-white transition-all cursor-pointer shadow-sm active:scale-95 z-10"
-            title="Close modal and resume drill"
+            title={t.closeBtn}
           >
             <X className="w-4 h-4" />
           </button>
@@ -69,30 +71,30 @@ export const BankrollSetupModal: React.FC<BankrollSetupModalProps> = ({
             <Coins className="w-8 h-8" />
           </div>
           <h2 className="text-xl font-black font-arcade text-white uppercase tracking-wider">
-            DRILL BANKROLL SETUP
+            {t.bankrollSetupTitle}
           </h2>
           <p className="text-xs text-slate-400 max-w-md mx-auto">
-            Choose your starting bankroll. Every decision risks real credits on live bets. Win to multiply your stack or run dry and face the mistake autopsy!
+            {t.bankrollSetupSub}
           </p>
         </div>
 
         {/* Selected Bankroll Visual */}
         <div className="p-4 rounded-2xl bg-[#070B14] border-2 border-[#1E2E48] text-center space-y-1">
           <span className="text-[11px] font-arcade text-amber-300 uppercase tracking-widest block">
-            STARTING DRILL STACK
+            {t.bankrollStackLabel}
           </span>
           <div className="text-4xl font-mono-telemetry font-black text-amber-400 drop-shadow-md">
-            {selectedCredits.toLocaleString()} <span className="text-xl">CREDITS 🪙</span>
+            {selectedCredits.toLocaleString()} <span className="text-xl">{t.bankrollCreditsUnit}</span>
           </div>
           <span className="text-[11px] text-slate-400 block font-mono-telemetry">
-            Equates to {Math.floor(selectedCredits / 25)} standard $25 bets
+            {t.bankrollEquates} {Math.floor(selectedCredits / 25)} {t.bankrollStdBets}
           </span>
         </div>
 
         {/* Preset Chips Grid */}
         <div className="space-y-2">
           <span className="text-xs font-arcade text-slate-300 block">
-            Select Starting Credit Preset:
+            {t.bankrollSelectPreset}
           </span>
           <div className="grid grid-cols-5 gap-2">
             {PRESET_CREDITS.map(amount => (
@@ -115,7 +117,7 @@ export const BankrollSetupModal: React.FC<BankrollSetupModalProps> = ({
         {/* Custom Input */}
         <div className="flex items-center gap-2 p-2.5 rounded-xl bg-[#09111D] border border-[#20314A]">
           <span className="text-xs font-arcade text-slate-400 whitespace-nowrap">
-            Custom Amount:
+            {t.bankrollCustomAmount}
           </span>
           <input
             type="number"
@@ -132,12 +134,12 @@ export const BankrollSetupModal: React.FC<BankrollSetupModalProps> = ({
         {/* Rules Highlight */}
         <div className="p-3 rounded-xl bg-amber-500/10 border border-amber-500/20 text-[11px] text-slate-300 space-y-1">
           <div className="flex items-center gap-1.5 font-arcade text-amber-300 font-bold">
-            <ShieldAlert className="w-4 h-4" /> DRILL RULES & SURVIVAL:
+            <ShieldAlert className="w-4 h-4" /> {t.bankrollRulesTitle}
           </div>
           <ul className="list-disc pl-4 space-y-0.5 text-slate-400 text-[10px]">
-            <li>Each drill deducts credits based on your wager, and pays winnings upon victory.</li>
-            <li>If you hit 0 credits, the drill halts immediately with a <strong>Full Mistake Autopsy</strong>.</li>
-            <li>You can click <strong>"Cash Out"</strong> at any moment to lock in profit and review your performance.</li>
+            <li>{t.bankrollRule1}</li>
+            <li>{t.bankrollRule2}</li>
+            <li>{t.bankrollRule3}</li>
           </ul>
         </div>
 
@@ -148,7 +150,7 @@ export const BankrollSetupModal: React.FC<BankrollSetupModalProps> = ({
             className="w-full py-3.5 rounded-2xl bg-gradient-to-r from-emerald-500 via-teal-500 to-emerald-600 hover:from-emerald-400 hover:to-teal-400 text-slate-950 font-arcade font-black text-sm tracking-wider flex items-center justify-center gap-2 shadow-xl shadow-emerald-950/50 active:scale-98 cursor-pointer transition-all"
           >
             <Zap className="w-5 h-5" />
-            START DRILL WITH {selectedCredits.toLocaleString()} CREDITS
+            {t.bankrollStartBtn} {selectedCredits.toLocaleString()} CR
           </button>
 
           <div className="flex items-center gap-2">
@@ -161,7 +163,7 @@ export const BankrollSetupModal: React.FC<BankrollSetupModalProps> = ({
                 }}
                 className="flex-1 py-2.5 px-3 rounded-xl bg-[#141F33] hover:bg-[#1E2F4C] border border-[#2D3F5E] text-slate-300 hover:text-white font-arcade text-xs text-center transition-all cursor-pointer"
               >
-                Cancel / Keep Current
+                {t.bankrollCancel}
               </button>
             )}
 
@@ -175,7 +177,7 @@ export const BankrollSetupModal: React.FC<BankrollSetupModalProps> = ({
                 className="flex-1 py-2.5 px-3 rounded-xl bg-[#181528] hover:bg-[#251E3E] border border-purple-500/30 text-purple-300 hover:text-purple-200 font-arcade text-xs flex items-center justify-center gap-1.5 transition-all cursor-pointer"
               >
                 <ArrowLeft className="w-3.5 h-3.5" />
-                Return to Hub
+                {t.bankrollReturnHub}
               </button>
             )}
           </div>

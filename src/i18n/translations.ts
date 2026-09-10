@@ -325,6 +325,186 @@ export interface Translations {
   howItWorks: string;
   kellyDeepDive: string;
   hiloDeepDive: string;
+
+  // Compliance Modal
+  complianceHeader: string;
+  complianceSub: string;
+  complianceStatuteTitle: string;
+  complianceStatuteBody: string;
+  complianceCertTitle: string;
+  complianceCertItem1: string;
+  complianceCertItem2: string;
+  complianceCertItem3: string;
+  complianceMathTitle: string;
+  complianceMathMemorylessTitle: string;
+  complianceMathMemorylessBody: string;
+  complianceMathDependentTitle: string;
+  complianceMathDependentBody: string;
+  complianceAckBtn: string;
+
+  // Feature Guide Modal
+  guideHeader: string;
+  guideSub: string;
+  guideSearchPlaceholder: string;
+  guideSearchClear: string;
+  guideCatAll: string;
+  guideCatBlackjack: string;
+  guideCatRoulette: string;
+  guideCatSlots: string;
+  guideCatPoker: string;
+  guideCatKelly: string;
+  guideCatDrills: string;
+  guideCatRouletteSys: string;
+  guideCatHub: string;
+  guideCollapse: string;
+  guideDetails: string;
+  guideWhatItDoes: string;
+  guideHowToUse: string;
+  guideMathPrinciple: string;
+  guideExactProof: string;
+  guideProAdvice: string;
+  guideOpenFeature: string;
+  guideDoneReading: string;
+  guideOfflineNotice: string;
+  guideNoMatches: string;
+  guideTrySearching: string;
+
+  // Bankroll Setup Modal
+  bankrollSetupTitle: string;
+  bankrollSetupSub: string;
+  bankrollStackLabel: string;
+  bankrollCreditsUnit: string;
+  bankrollEquates: string;
+  bankrollStdBets: string;
+  bankrollSelectPreset: string;
+  bankrollCustomAmount: string;
+  bankrollRulesTitle: string;
+  bankrollRule1: string;
+  bankrollRule2: string;
+  bankrollRule3: string;
+  bankrollStartBtn: string;
+  bankrollCancel: string;
+  bankrollReturnHub: string;
+
+  // Drill Summary Modal
+  summaryBusted: string;
+  summaryCashedOut: string;
+  summaryStart: string;
+  summaryEnd: string;
+  summaryRoi: string;
+  summaryTier: string;
+  summaryLostMost: string;
+  summaryWonMost: string;
+  summaryAutopsy: string;
+  summaryRestart: string;
+  summaryBackHub: string;
+  summaryAllGames: string;
+  summaryNoMistakes: string;
+
+  // Drill Simulation UI
+  simLiveRouletteTitle: string;
+  simLiveRouletteSub: string;
+  simActiveFelt: string;
+  simZeroToHeroBtn: string;
+  simPhysicsEngine: string;
+  simResult: string;
+  simZero: string;
+  simEven: string;
+  simOdd: string;
+  simRecentSpins: string;
+  simSpinsLogged: string;
+  simNoSpinsYet: string;
+  simWinningHits: string;
+  simSpinWheel: string;
+  simClearBets: string;
+  simDouble: string;
+  simRebet: string;
+
+  // Additional Roulette & Table labels
+  advPlayTelemetry: string;
+  tableFeltBettingSpot: string;
+  clickAnyNumberHelp: string;
+  totalWagerLabel: string;
+  spinningWheel: string;
+  placeBetsToSpin: string;
+
+  // Additional Summary Modal labels
+  summaryCreditsSuffix: string;
+  summaryLost: string;
+  summaryYourAction: string;
+  summaryGtoOptimal: string;
+  summaryWon: string;
+  summaryNoWins: string;
+  summaryTelemetryHeader: string;
+  summaryRounds: string;
+  summaryAccuracy: string;
+  summaryAutopsyHeader: string;
+  summaryFilterAll: string;
+  summaryNoMistakesCat: string;
+  summaryStartNewBtn: string;
+  summaryResumePlay: string;
+  summaryCloseAutopsy: string;
+  summaryHub: string;
+
+  // Slot Machine Drill
+  gridLabel: string;
+  evBreachDetected: string;
+  evSubThreshold: string;
+  mustHitByCap: string;
+  currentProgressiveMeter: string;
+  distanceToCap: string;
+  breakEvenThresholdLabel: string;
+  capLabel: string;
+  formatLabel: string;
+  reelsRowsFormat: string;
+  activePaylinesLabel: string;
+  paylineWinLabel: string;
+  mustHitByTriggeredLabel: string;
+  casinoFloorCall: string;
+  betLabel: string;
+  attackMachineBtn: string;
+  walkAwayPassBtn: string;
+  spinGridBtn: string;
+  spinningStatus: string;
+  scoutBonus: string;
+  leakPenalty: string;
+  nextMachineBtn: string;
+  machineLabel: string;
+  scoutingMachineCount: string;
+
+  // Blackjack Lab & Table
+  tabCasinoTable: string;
+  tabStrategyMatrix: string;
+  tabHowItWorks: string;
+  hideCountHud: string;
+  showCountHud: string;
+  advisorOn: string;
+  advisorOff: string;
+  runningCount: string;
+  decksRemaining: string;
+  trueCount: string;
+  playerEdge: string;
+  dealerTotal: string;
+  playerTotal: string;
+  betToDeal: string;
+  clearBet: string;
+  dealHand: string;
+  doubleBet: string;
+  gtoAdvisorRec: string;
+  matrixTitle: string;
+  matrixSubtitle: string;
+
+  // Card Counting Academy
+  countingAcademyTitle: string;
+  countingAcademySubtitle: string;
+  tabSecret: string;
+  tabHiLo: string;
+  tabTrueCount: string;
+  tabBetSpread: string;
+  tabPractice: string;
+  whatIsCardTag: string;
+  resetShoe: string;
+  streakLabel: string;
 }
 
 export const translations: Record<Language, Translations> = {
@@ -635,7 +815,187 @@ export const translations: Record<Language, Translations> = {
     zeroToHeroGuide: 'Zero to Hero Guide',
     howItWorks: 'How the Game Works',
     kellyDeepDive: 'Kelly Criterion Explained Simply',
-    hiloDeepDive: 'Hi-Lo Card Counting Explained'
+    hiloDeepDive: 'Hi-Lo Card Counting Explained',
+
+    // Compliance Modal
+    complianceHeader: 'Regulatory Compliance & Statutory Framework',
+    complianceSub: 'Nevada NRS 465.075 • Apple App Store 5.3.4 • Research & Simulation Only',
+    complianceStatuteTitle: 'Nevada Revised Statutes (NRS) 465.075 & 465.088',
+    complianceStatuteBody: 'Under Nevada law, it is a Category B felony (punishable by 1 to 10 years imprisonment and up to $10,000 fines per violation) to use or possess any computerized hardware or software at a licensed gaming establishment to project outcomes, track cards, or calculate playing or betting strategies during live play.',
+    complianceCertTitle: 'Platform Certification & Scope',
+    complianceCertItem1: 'Zero Real-Money Wagering: Operates strictly on virtual simulation credits. No financial deposits or withdrawals.',
+    complianceCertItem2: 'No Real-Time In-Venue Assistance (RTA): All simulation engines are intended for offline study, mathematical audits, and pedagogical training.',
+    complianceCertItem3: 'App Store 5.3.4 & Google Play Compliant: Categorized as a Quantitative Gaming Simulator & Statistical Analysis Tool.',
+    complianceMathTitle: 'Mathematical Feasibility Breakdown',
+    complianceMathMemorylessTitle: 'Memoryless Independent Games:',
+    complianceMathMemorylessBody: 'Roulette, Craps, Sic Bo, & Standard Spins. Probability of outcome is identical each round: P(X_t|X_1..X_t-1) = P(X_t). No software can eliminate the house edge.',
+    complianceMathDependentTitle: 'Dependent & State-Based Games:',
+    complianceMathDependentBody: 'Shoe Blackjack (Hypergeometric sampling without replacement), PvP Poker (CFR+ Game Theory), and Must-Hit-By Progressive Slots have mathematical state thresholds yielding positive expectation (+EV).',
+    complianceAckBtn: 'Understood & Acknowledged',
+
+    // Feature Guide Modal
+    guideHeader: 'Advantage Play Codex & Mathematical Blueprints',
+    guideSub: 'Interactive tactical guides, expected value formulas, and operating procedures.',
+    guideSearchPlaceholder: 'Search blueprints (e.g., Hi-Lo, Must-Hit-By, MDF, Kelly)...',
+    guideSearchClear: 'Clear',
+    guideCatAll: 'All Advantage Tools',
+    guideCatBlackjack: 'Blackjack & Hi-Lo',
+    guideCatRoulette: 'Roulette & Physics',
+    guideCatSlots: 'Slots (Must-Hit-By)',
+    guideCatPoker: 'Poker GTO & Pot Odds',
+    guideCatKelly: 'Kelly & Bankroll',
+    guideCatDrills: 'Live Game Drills',
+    guideCatRouletteSys: 'Roulette Systems',
+    guideCatHub: 'Hub & Legal Statute',
+    guideCollapse: 'Collapse ▲',
+    guideDetails: 'Details ▼',
+    guideWhatItDoes: 'WHAT THIS UNIQUE FEATURE DOES',
+    guideHowToUse: 'HOW TO OPERATE ON THE CASINO FLOOR OR IN PRACTICE',
+    guideMathPrinciple: 'MATHEMATICAL PRINCIPLE',
+    guideExactProof: 'EXACT PROOF',
+    guideProAdvice: 'Pro Advice:',
+    guideOpenFeature: 'OPEN FEATURE',
+    guideDoneReading: 'Done Reading',
+    guideOfflineNotice: 'Strictly offline math trainer • Free from external server dependencies',
+    guideNoMatches: 'No matching features found for',
+    guideTrySearching: 'Try searching for "Kelly", "MHB", "deviations", or "odds".',
+
+    // Bankroll Setup Modal
+    bankrollSetupTitle: 'DRILL BANKROLL SETUP',
+    bankrollSetupSub: 'Choose your starting bankroll. Every decision risks real credits on live bets. Win to multiply your stack or run dry and face the mistake autopsy!',
+    bankrollStackLabel: 'STARTING DRILL STACK',
+    bankrollCreditsUnit: 'CREDITS 🪙',
+    bankrollEquates: 'Equates to',
+    bankrollStdBets: 'standard $25 bets',
+    bankrollSelectPreset: 'Select Starting Credit Preset:',
+    bankrollCustomAmount: 'Custom Amount:',
+    bankrollRulesTitle: 'DRILL RULES & SURVIVAL:',
+    bankrollRule1: 'Each drill deducts credits based on your wager, and pays winnings upon victory.',
+    bankrollRule2: 'If you hit 0 credits, the drill halts immediately with a Full Mistake Autopsy.',
+    bankrollRule3: 'You can click "Cash Out" at any moment to lock in profit and review your performance.',
+    bankrollStartBtn: 'START DRILL WITH',
+    bankrollCancel: 'Cancel / Keep Current',
+    bankrollReturnHub: 'Return to Hub',
+
+    // Drill Summary Modal
+    summaryBusted: 'BANKROLL DEPLETED - BUSTED!',
+    summaryCashedOut: 'DRILL CASHED OUT SECURELY',
+    summaryStart: 'Start:',
+    summaryEnd: 'End:',
+    summaryRoi: 'ROI',
+    summaryTier: 'PERFORMANCE TIER:',
+    summaryLostMost: 'WHERE YOU LOST THE MOST',
+    summaryWonMost: 'MOST PROFITABLE ADVANTAGE',
+    summaryAutopsy: 'DRILL MISTAKE AUTOPSY',
+    summaryRestart: 'Restart Drill',
+    summaryBackHub: 'Back to Hub',
+    summaryAllGames: 'All Games',
+    summaryNoMistakes: 'Flawless session! No sub-optimal EV mistakes recorded.',
+
+    // Drill Simulation UI
+    simLiveRouletteTitle: 'Live Roulette Table Simulation',
+    simLiveRouletteSub: 'Place real chips on the felt layout, spin the wheel & experience authentic casino physics',
+    simActiveFelt: 'ACTIVE FELT',
+    simZeroToHeroBtn: 'Zero to Hero Guide',
+    simPhysicsEngine: 'PHYSICS WHEEL ENGINE',
+    simResult: 'RESULT:',
+    simZero: 'ZERO',
+    simEven: 'EVEN',
+    simOdd: 'ODD',
+    simRecentSpins: 'RECENT WHEEL SPINS',
+    simSpinsLogged: 'SPINS LOGGED',
+    simNoSpinsYet: 'No spins yet. Place bets and press SPIN WHEEL.',
+    simWinningHits: 'Winning Hits:',
+    simSpinWheel: 'SPIN WHEEL',
+    simClearBets: 'CLEAR BETS',
+    simDouble: 'DOUBLE',
+    simRebet: 'REBET',
+
+    // Additional Roulette & Table labels
+    advPlayTelemetry: 'ADVANTAGE PLAY TELEMETRY',
+    tableFeltBettingSpot: 'TABLE FELT BETTING SPOT',
+    clickAnyNumberHelp: '(Click any number or area to place chips)',
+    totalWagerLabel: 'TOTAL WAGER',
+    spinningWheel: 'SPINNING WHEEL...',
+    placeBetsToSpin: 'PLACE BETS TO SPIN',
+
+    // Additional Summary Modal labels
+    summaryCreditsSuffix: 'CREDITS 🪙',
+    summaryLost: 'Lost',
+    summaryYourAction: 'Your Decision',
+    summaryGtoOptimal: 'GTO Optimal',
+    summaryWon: 'Won',
+    summaryNoWins: 'No significant winning plays logged yet.',
+    summaryTelemetryHeader: 'GAME-BY-GAME METRICS & PROFICIENCY',
+    summaryRounds: 'rounds',
+    summaryAccuracy: 'accuracy',
+    summaryAutopsyHeader: 'Mistake Autopsy ({count} leaks identified)',
+    summaryFilterAll: 'ALL',
+    summaryNoMistakesCat: 'No mistakes in this category!',
+    summaryStartNewBtn: 'Start New Drill',
+    summaryResumePlay: 'Resume Play',
+    summaryCloseAutopsy: 'Close Autopsy',
+    summaryHub: 'Hub',
+
+    // Slot Machine Drill
+    gridLabel: 'GRID:',
+    evBreachDetected: '+EV BREACH DETECTED',
+    evSubThreshold: '-EV SUB-THRESHOLD',
+    mustHitByCap: 'MUST HIT BY CAP',
+    currentProgressiveMeter: 'CURRENT PROGRESSIVE JACKPOT METER',
+    distanceToCap: 'Distance to Cap ΔJ',
+    breakEvenThresholdLabel: 'Break-Even',
+    capLabel: 'Cap',
+    formatLabel: 'FORMAT',
+    reelsRowsFormat: 'FORMAT: {cols} REELS × {rows} ROWS',
+    activePaylinesLabel: 'ACTIVE PAYLINES',
+    paylineWinLabel: 'PAYLINE WIN!',
+    mustHitByTriggeredLabel: 'MUST-HIT-BY PROGRESSIVE TRIGGERED!',
+    casinoFloorCall: 'CASINO FLOOR CALL: Is this slot +EV Advantage or a -EV House Trap?',
+    betLabel: 'BET',
+    attackMachineBtn: 'ATTACK MACHINE (+EV)',
+    walkAwayPassBtn: 'WALK AWAY & PASS (-EV)',
+    spinGridBtn: 'SPIN GRID',
+    spinningStatus: 'SPINNING...',
+    scoutBonus: '+50 CR SCOUT BONUS',
+    leakPenalty: '-50 CR LEAK PENALTY',
+    nextMachineBtn: 'NEXT MACHINE',
+    machineLabel: 'Machine',
+    scoutingMachineCount: 'Scouting machine',
+
+    // Blackjack Lab & Table
+    tabCasinoTable: 'CASINO TABLE',
+    tabStrategyMatrix: 'STRATEGY MATRIX',
+    tabHowItWorks: 'HOW IT WORKS',
+    hideCountHud: 'HIDE COUNT HUD',
+    showCountHud: 'SHOW COUNT HUD',
+    advisorOn: 'ADVISOR ON',
+    advisorOff: 'ADVISOR OFF',
+    runningCount: 'RUNNING COUNT',
+    decksRemaining: 'DECKS REMAINING',
+    trueCount: 'TRUE COUNT',
+    playerEdge: 'PLAYER EDGE',
+    dealerTotal: 'DEALER TOTAL',
+    playerTotal: 'PLAYER TOTAL',
+    betToDeal: 'BET TO DEAL',
+    clearBet: 'CLEAR BET',
+    dealHand: 'DEAL HAND',
+    doubleBet: '2X BET',
+    gtoAdvisorRec: 'GTO ADVISOR RECOMMENDATION',
+    matrixTitle: '6-Deck S17 Basic Strategy Matrix',
+    matrixSubtitle: 'The mathematically proven decision matrix for every combination of player total and dealer upcard.',
+
+    // Card Counting Academy
+    countingAcademyTitle: 'Card Counting Academy (Zero to Hero)',
+    countingAcademySubtitle: 'Master the exact mathematical counting system that shifts the casino edge in your favor',
+    tabSecret: '0. Secret',
+    tabHiLo: '1. Hi-Lo',
+    tabTrueCount: '2. True Count',
+    tabBetSpread: '3. Bet Spread',
+    tabPractice: '⚡ Practice',
+    whatIsCardTag: 'WHAT IS THE HI-LO VALUE OF THIS CARD?',
+    resetShoe: 'Reset Shoe',
+    streakLabel: 'Streak'
   },
   ru: {
     appName: 'ХАУСБРЕЙКЕР',
@@ -944,7 +1304,187 @@ export const translations: Record<Language, Translations> = {
     zeroToHeroGuide: 'Гид: От Нуля до Профи',
     howItWorks: 'Как работает игра',
     kellyDeepDive: 'Критерий Келли: простое объяснение',
-    hiloDeepDive: 'Подсчет карт Hi-Lo с нуля'
+    hiloDeepDive: 'Подсчет карт Hi-Lo с нуля',
+
+    // Compliance Modal
+    complianceHeader: 'Законодательное регулирование и правовой статус',
+    complianceSub: 'Невада NRS 465.075 • Apple App Store 5.3.4 • Исключительно для исследований и обучения',
+    complianceStatuteTitle: 'Свод законов Невады (NRS) 465.075 и 465.088',
+    complianceStatuteBody: 'По законодательству штата Невада использование или наличие компьютерных устройств либо программного обеспечения в игорных заведениях для прогнозирования исходов, подсчета карт или расчета стратегий ставок во время реальной игры признается тяжким преступлением категории B (наказывается лишением свободы от 1 до 10 лет и штрафом до $10 000 за каждое нарушение).',
+    complianceCertTitle: 'Сертификация платформы и область применения',
+    complianceCertItem1: 'Без реальных денег: Платформа использует исключительно виртуальные тренировочные кредиты. Финансовые депозиты и выводы невозможны.',
+    complianceCertItem2: 'Запрет использования в казино (RTA): Все симуляторы предназначены для автономного математического анализа, аудита вероятностей и тренировки памяти дома.',
+    complianceCertItem3: 'Соответствие стандартам App Store 5.3.4 и Google Play: Категория «Тренажер количественного анализа и математической статистики».',
+    complianceMathTitle: 'Математическая классификация игр',
+    complianceMathMemorylessTitle: 'Игры без памяти (независимые испытания):',
+    complianceMathMemorylessBody: 'Рулетка, кости (Craps), Сик Бо и стандартные слоты. Вероятность исхода каждого раунда строго постоянна: P(X_t|X_1..X_t-1) = P(X_t). Никакое ПО не способно устранить преимущество казино.',
+    complianceMathDependentTitle: 'Игры с памятью состояний (зависимые испытания):',
+    complianceMathDependentBody: 'Блэкджек из шуза (гипергеометрическая выборка без возвращения), PvP Покер (теория игр CFR+) и слоты Must-Hit-By обладают математическими порогами состояний с положительным математическим ожиданием (+EV).',
+    complianceAckBtn: 'Ознакомлен и подтверждаю',
+
+    // Feature Guide Modal
+    guideHeader: 'Кодекс математического преимущества и тактические схемы',
+    guideSub: 'Интерактивные практические руководства, формулы математического ожидания и регламенты действий.',
+    guideSearchPlaceholder: 'Поиск по схемам (напр., Hi-Lo, Must-Hit-By, MDF, Келли)...',
+    guideSearchClear: 'Очистить',
+    guideCatAll: 'Все инструменты',
+    guideCatBlackjack: 'Блэкджек и Hi-Lo',
+    guideCatRoulette: 'Рулетка и физика',
+    guideCatSlots: 'Слоты (Must-Hit-By)',
+    guideCatPoker: 'Покер GTO и шансы банка',
+    guideCatKelly: 'Келли и банкролл',
+    guideCatDrills: 'Тренажер живых игр',
+    guideCatRouletteSys: 'Системы рулетки',
+    guideCatHub: 'Центр и правовые нормы',
+    guideCollapse: 'Свернуть ▲',
+    guideDetails: 'Подробнее ▼',
+    guideWhatItDoes: 'ЧТО ДЕЛАЕТ ЭТОТ ИНСТРУМЕНТ',
+    guideHowToUse: 'ПОРЯДОК ДЕЙСТВИЙ В КАЗИНО ИЛИ НА ТРЕНИРОВКЕ',
+    guideMathPrinciple: 'МАТЕМАТИЧЕСКИЙ ПРИНЦИП',
+    guideExactProof: 'ТОЧНОЕ ДОКАЗАТЕЛЬСТВО',
+    guideProAdvice: 'Совет эксперта:',
+    guideOpenFeature: 'ОТКРЫТЬ МОДУЛЬ',
+    guideDoneReading: 'Завершить чтение',
+    guideOfflineNotice: 'Полностью автономный математический тренажер • Без внешних серверов',
+    guideNoMatches: 'Ничего не найдено по запросу',
+    guideTrySearching: 'Попробуйте поискать «Келли», «MHB», «отклонения» или «шансы».',
+
+    // Bankroll Setup Modal
+    bankrollSetupTitle: 'НАСТРОЙКА БАНКРОЛЛА ДЛЯ ТРЕНИРОВКИ',
+    bankrollSetupSub: 'Выберите стартовый баланс. Каждое решение рискует реальными кредитами в ставках. Умножьте стек точной игрой или столкнитесь с полным разбором ошибок при обнулении!',
+    bankrollStackLabel: 'СТАРТОВЫЙ ТРЕНИРОВОЧНЫЙ СТЕК',
+    bankrollCreditsUnit: 'КРЕДИТОВ 🪙',
+    bankrollEquates: 'Эквивалентно',
+    bankrollStdBets: 'стандартным ставкам по 25$',
+    bankrollSelectPreset: 'Выберите готовый стек кредитов:',
+    bankrollCustomAmount: 'Своя сумма:',
+    bankrollRulesTitle: 'ПРАВИЛА ТРЕНИРОВКИ И ВЫЖИВАНИЕ:',
+    bankrollRule1: 'Каждый раунд списывает кредиты ставки и начисляет выигрыш при победе.',
+    bankrollRule2: 'При балансе 0 кредитов тренировка немедленно завершается полным анализом ошибок.',
+    bankrollRule3: 'Вы можете нажать «Забрать банк» в любой момент, чтобы зафиксировать прибыль и просмотреть разбор.',
+    bankrollStartBtn: 'НАЧАТЬ ТРЕНИРОВКУ С',
+    bankrollCancel: 'Отмена / Оставить текущий',
+    bankrollReturnHub: 'В главное меню',
+
+    // Drill Summary Modal
+    summaryBusted: 'БАНКРОЛЛ ИСЧЕРПАН - ВЫБЫВАНИЕ!',
+    summaryCashedOut: 'БАНКРОЛЛ УСПЕШНО ЗАФИКСИРОВАН',
+    summaryStart: 'Старт:',
+    summaryEnd: 'Финиш:',
+    summaryRoi: 'ROI',
+    summaryTier: 'УРОВЕНЬ МАСТЕРСТВА:',
+    summaryLostMost: 'ГДЕ БЫЛО БОЛЬШЕ ВСЕГО ПОТЕРЬ',
+    summaryWonMost: 'САМЫЙ ПРИБЫЛЬНЫЙ ИСТОЧНИК ПРЕИМУЩЕСТВА',
+    summaryAutopsy: 'РАЗБОР ОШИБОК И МАТЕМАТИЧЕСКИХ УТЕЧЕК',
+    summaryRestart: 'Начать заново',
+    summaryBackHub: 'В главное меню',
+    summaryAllGames: 'Все игры',
+    summaryNoMistakes: 'Безупречная сессия! Ошибок математического ожидания не зафиксировано.',
+
+    // Drill Simulation UI
+    simLiveRouletteTitle: 'Симуляция стола рулетки',
+    simLiveRouletteSub: 'Размещайте фишки на сукне, запускайте колесо и изучайте аутентичную физику казино',
+    simActiveFelt: 'АКТИВНОЕ СУКНО',
+    simZeroToHeroBtn: 'Гид: От Нуля до Профи',
+    simPhysicsEngine: 'ФИЗИЧЕСКИЙ ДВИЖОК КОЛЕСА',
+    simResult: 'РЕЗУЛЬТАТ:',
+    simZero: 'ЗЕРО',
+    simEven: 'ЧЕТ',
+    simOdd: 'НЕЧЕТ',
+    simRecentSpins: 'ПОСЛЕДНИЕ СПИНЫ КОЛЕСА',
+    simSpinsLogged: 'СПИНОВ В ИСТОРИИ',
+    simNoSpinsYet: 'Спинов пока нет. Сделайте ставки и нажмите ВРАЩАТЬ КОЛЕСО.',
+    simWinningHits: 'Выигрышные ставки:',
+    simSpinWheel: 'ВРАЩАТЬ КОЛЕСО',
+    simClearBets: 'ОЧИСТИТЬ СУКНО',
+    simDouble: 'УДВОИТЬ',
+    simRebet: 'ПОВТОРИТЬ',
+
+    // Additional Roulette & Table labels
+    advPlayTelemetry: 'ТЕЛЕМЕТРИЯ ПРЕИМУЩЕСТВА',
+    tableFeltBettingSpot: 'ПОЛЕ СТАВОК НА СУКНЕ',
+    clickAnyNumberHelp: '(Нажмите на число или зону для ставки)',
+    totalWagerLabel: 'ОБЩАЯ СТАВКА',
+    spinningWheel: 'КОЛЕСО ВРАЩАЕТСЯ...',
+    placeBetsToSpin: 'СДЕЛАЙТЕ СТАВКУ ДЛЯ ВРАЩЕНИЯ',
+
+    // Additional Summary Modal labels
+    summaryCreditsSuffix: 'КРЕДИТОВ 🪙',
+    summaryLost: 'Потеряно',
+    summaryYourAction: 'Ваше решение',
+    summaryGtoOptimal: 'Оптимально по GTO',
+    summaryWon: 'Выиграно',
+    summaryNoWins: 'Значимых выигрышных решений пока нет.',
+    summaryTelemetryHeader: 'ПОКАЗАТЕЛИ И ЭФФЕКТИВНОСТЬ ПО ИГРАМ',
+    summaryRounds: 'раундов',
+    summaryAccuracy: 'точность',
+    summaryAutopsyHeader: 'Разбор ошибок (найдено утечек: {count})',
+    summaryFilterAll: 'ВСЕ',
+    summaryNoMistakesCat: 'В этой категории нет ошибок!',
+    summaryStartNewBtn: 'Начать новую тренировку',
+    summaryResumePlay: 'Продолжить игру',
+    summaryCloseAutopsy: 'Закрыть разбор',
+    summaryHub: 'В меню',
+
+    // Slot Machine Drill
+    gridLabel: 'СЕТКА:',
+    evBreachDetected: '+EV ПОРОГ ПРЕОДОЛЕН',
+    evSubThreshold: '-EV НИЖЕ ПОРОГА',
+    mustHitByCap: 'ПОТОЛОК MUST-HIT-BY',
+    currentProgressiveMeter: 'ТЕКУЩИЙ СЧЕТЧИК ДЖЕКПОТА',
+    distanceToCap: 'Дистанция до потолка ΔJ',
+    breakEvenThresholdLabel: 'Безубыточность',
+    capLabel: 'Потолок',
+    formatLabel: 'ФОРМАТ',
+    reelsRowsFormat: 'ФОРМАТ: {cols} БАРАБАНОВ × {rows} РЯДОВ',
+    activePaylinesLabel: 'АКТИВНЫЕ ЛИНИИ',
+    paylineWinLabel: 'ВЫИГРЫШ ПО ЛИНИИ!',
+    mustHitByTriggeredLabel: 'ДЖЕКПОТ MUST-HIT-BY ВЫБИТ!',
+    casinoFloorCall: 'РЕШЕНИЕ В КАЗИНО: Этот слот дает +EV преимущество или это -EV ловушка?',
+    betLabel: 'СТАВКА',
+    attackMachineBtn: 'АТАКОВАТЬ СЛОТ (+EV)',
+    walkAwayPassBtn: 'ПРОЙТИ МИМО (-EV)',
+    spinGridBtn: 'КРУТИТЬ БАРАБАНЫ',
+    spinningStatus: 'ВРАЩЕНИЕ...',
+    scoutBonus: '+50 КР БОНУС СКАУТА',
+    leakPenalty: '-50 КР ШТРАФ ЗА УТЕЧКУ',
+    nextMachineBtn: 'СЛЕДУЮЩИЙ АВТОМАТ',
+    machineLabel: 'Автомат',
+    scoutingMachineCount: 'Осмотр автомата',
+
+    // Blackjack Lab & Table
+    tabCasinoTable: 'СТОЛ КАЗИНО',
+    tabStrategyMatrix: 'МАТРИЦА СТРАТЕГИИ',
+    tabHowItWorks: 'КАК ЭТО РАБОТАЕТ',
+    hideCountHud: 'СКРЫТЬ СЧЕТ HUD',
+    showCountHud: 'ПОКАЗАТЬ СЧЕТ HUD',
+    advisorOn: 'СОВЕТНИК ВКЛ',
+    advisorOff: 'СОВЕТНИК ВЫКЛ',
+    runningCount: 'ТЕКУЩИЙ СЧЕТ',
+    decksRemaining: 'ОСТАЛОСЬ КОЛОД',
+    trueCount: 'ИСТИННЫЙ СЧЕТ',
+    playerEdge: 'ПРЕИМУЩЕСТВО ИГРОКА',
+    dealerTotal: 'СУММА ДИЛЕРА',
+    playerTotal: 'СУММА ИГРОКА',
+    betToDeal: 'СДЕЛАЙТЕ СТАВКУ',
+    clearBet: 'СБРОС СТАВКИ',
+    dealHand: 'РАЗДАТЬ КАРТЫ',
+    doubleBet: 'СТАВКА 2X',
+    gtoAdvisorRec: 'РЕКОМЕНДАЦИЯ GTO СОВЕТНИКА',
+    matrixTitle: 'Матрица базовой стратегии (6 колод, S17)',
+    matrixSubtitle: 'Математически доказанные решения для любой комбинации карт игрока и дилера.',
+
+    // Card Counting Academy
+    countingAcademyTitle: 'Академия счета карт (От нуля до профи)',
+    countingAcademySubtitle: 'Освойте точную математическую систему счета, дающую перевес над казино',
+    tabSecret: '0. Секрет',
+    tabHiLo: '1. Hi-Lo',
+    tabTrueCount: '2. Истинный счет',
+    tabBetSpread: '3. Спред ставок',
+    tabPractice: '⚡ Практика',
+    whatIsCardTag: 'КАКОВО ЗНАЧЕНИЕ ЭТОЙ КАРТЫ В HI-LO?',
+    resetShoe: 'Сброс башмака',
+    streakLabel: 'Серия'
   },
   he: {
     appName: 'האוס-ברייקר',
@@ -1253,6 +1793,186 @@ export const translations: Record<Language, Translations> = {
     zeroToHeroGuide: 'מדריך: מאפס למקצוען',
     howItWorks: 'איך המשחק עובד',
     kellyDeepDive: 'הסבר פשוט על נוסחת קלי',
-    hiloDeepDive: 'הסבר על ספירת קלפים היי-לו'
+    hiloDeepDive: 'הסבר על ספירת קלפים היי-לו',
+
+    // Compliance Modal
+    complianceHeader: 'תאימות רגולטורית ומסגרת חוקית',
+    complianceSub: 'נבאדה NRS 465.075 • Apple App Store 5.3.4 • למחקר וסימולציה בלבד',
+    complianceStatuteTitle: 'חוקי מדינת נבאדה (NRS) 465.075 ו-465.088',
+    complianceStatuteBody: 'לפי החוק בנבאדה, שימוש או החזקה של חומרה או תוכנה ממוחשבת במוסד הימורים מורשה לחיזוי תוצאות, ספירת קלפים או חישוב אסטרטגיות משחק והימורים בזמן אמת מהווים עבירה פלילית מסוג B (עונש של 1 עד 10 שנות מאסר וקנס של עד 10,000$ לכל הפרה).',
+    complianceCertTitle: 'הסמכת הפלטפורמה ותחום השימוש',
+    complianceCertItem1: 'ללא כסף אמיתי: הפלטפורמה פועלת אך ורק על קרדיטים וירטואליים לסימולציה. אין אפשרות להפקדות או משיכות כספיות.',
+    complianceCertItem2: 'איסור שימוש בזמן אמת בקזינו (RTA): כל מנועי הסימולציה מיועדים למחקר לא מקוון, ביקורת מתמטית ואימון זיכרון אישי.',
+    complianceCertItem3: 'תאימות ל-App Store 5.3.4 ו-Google Play: מסווג כסימולטור משחקים כמותי וכלי לניתוח סטטיסטי.',
+    complianceMathTitle: 'סיווג מתמטי של משחקים',
+    complianceMathMemorylessTitle: 'משחקים חסרי זיכרון (אירועים בלתי תלויים):',
+    complianceMathMemorylessBody: 'רולטה, קראפס, סיק בו ומכונות מזל רגילות. ההסתברות לכל תוצאה זהה לחלוטין בכל סיבוב: P(X_t|X_1..X_t-1) = P(X_t). שום תוכנה לא יכולה להעלים את יתרון הבית.',
+    complianceMathDependentTitle: 'משחקים מבוססי מצב וזיכרון (אירועים תלויים):',
+    complianceMathDependentBody: 'בלאק ג\'ק מחבילה מרובה (דגימה ללא החזרה), פוקר שחקן נגד שחקן (תורת המשחקים CFR+) ומכונות Must-Hit-By מכילים ספי מצב מתמטיים שמניבים תוחלת חיובית (+EV).',
+    complianceAckBtn: 'הבנתי ומאשר/ת',
+
+    // Feature Guide Modal
+    guideHeader: 'קודקס היתרון הסטטיסטי ומדריכים מתמטיים',
+    guideSub: 'מדריכים טקטיים אינטראקטיביים, נוסחאות תוחלת רווח ונהלי פעולה מדויקים.',
+    guideSearchPlaceholder: 'חיפוש מדריכים (למשל: היי-לו, Must-Hit-By, קלי, MDF)...',
+    guideSearchClear: 'נקה',
+    guideCatAll: 'כל הכלים',
+    guideCatBlackjack: 'בלאק ג\'ק והיי-לו',
+    guideCatRoulette: 'רולטה ופיזיקה',
+    guideCatSlots: 'מכונות (Must-Hit-By)',
+    guideCatPoker: 'פוקר GTO וסיכויי קופה',
+    guideCatKelly: 'קלי וניהול בנקרוול',
+    guideCatDrills: 'אימוני שולחן חיים',
+    guideCatRouletteSys: 'מערכות רולטה',
+    guideCatHub: 'ראשי ותקנון חוקי',
+    guideCollapse: 'כווץ ▲',
+    guideDetails: 'פרטים ▼',
+    guideWhatItDoes: 'מה הכלי הייחודי הזה עושה',
+    guideHowToUse: 'כיצד לפעול בקזינו או באימונים',
+    guideMathPrinciple: 'עקרון מתמטי',
+    guideExactProof: 'הוכחה מדויקת',
+    guideProAdvice: 'טיפ מקצועי:',
+    guideOpenFeature: 'פתח כלי',
+    guideDoneReading: 'סיימתי לקרוא',
+    guideOfflineNotice: 'מאמן מתמטי לא מקוון לחלוטין • ללא תלות בשרתים חיצוניים',
+    guideNoMatches: 'לא נמצאו כלים התואמים לחיפוש',
+    guideTrySearching: 'נסה לחפש "קלי", "MHB", "סטיות" או "סיכויים".',
+
+    // Bankroll Setup Modal
+    bankrollSetupTitle: 'הגדרת בנקרוול לאימון',
+    bankrollSetupSub: 'בחר את סכום הפתיחה לאימון. כל החלטה מסכנת קרדיטים אמיתיים בהימורים חיים. הכפל את הערימה בדיוק מתמטי או התמודד עם תחקיר טעויות מלא במקרה של פשיטת רגל!',
+    bankrollStackLabel: 'ערימת פתיחה לאימון',
+    bankrollCreditsUnit: 'קרדיטים 🪙',
+    bankrollEquates: 'שווה ערך ל-',
+    bankrollStdBets: 'הימורים רגילים של 25$',
+    bankrollSelectPreset: 'בחר סכום פתיחה מוכן:',
+    bankrollCustomAmount: 'סכום מותאם אישית:',
+    bankrollRulesTitle: 'חוקי אימון והישרדות:',
+    bankrollRule1: 'כל אימון מנכה קרדיטים לפי גודל ההימור, ומזכה בזכיות בעת ניצחון.',
+    bankrollRule2: 'אם תגיע ל-0 קרדיטים, האימון ייעצר מיד עם תחקיר טעויות מלא.',
+    bankrollRule3: 'ניתן ללחוץ על "פדה זכיות" בכל עת כדי לנעול רווחים ולסקור את הביצועים שלך.',
+    bankrollStartBtn: 'התחל אימון עם',
+    bankrollCancel: 'ביטול / השאר נוכחי',
+    bankrollReturnHub: 'חזרה למסך הראשי',
+
+    // Drill Summary Modal
+    summaryBusted: 'הבנקרוול אזל - פשיטת רגל!',
+    summaryCashedOut: 'האימון נפדה בהצלחה',
+    summaryStart: 'התחלה:',
+    summaryEnd: 'סיום:',
+    summaryRoi: 'תשואה (ROI)',
+    summaryTier: 'דירוג מיומנות:',
+    summaryLostMost: 'איפה הפסדת הכי הרבה',
+    summaryWonMost: 'היתרון הרווחי ביותר',
+    summaryAutopsy: 'תחקיר טעויות ודליפות תוחלת (EV)',
+    summaryRestart: 'התחל מחדש',
+    summaryBackHub: 'חזרה למסך הראשי',
+    summaryAllGames: 'כל המשחקים',
+    summaryNoMistakes: 'סשן ללא רבב! לא תועדו טעויות תוחלת מתמטיות.',
+
+    // Drill Simulation UI
+    simLiveRouletteTitle: 'סימולציית שולחן רולטה חיה',
+    simLiveRouletteSub: 'הצב ז\'יטונים אמיתיים על לוח הלבד, סובב את הגלגל והתנסה בפיזיקת קזינו אותנטית',
+    simActiveFelt: 'לוח לבד פעיל',
+    simZeroToHeroBtn: 'מדריך: מאפס למקצוען',
+    simPhysicsEngine: 'מנוע פיזיקת גלגל',
+    simResult: 'תוצאה:',
+    simZero: 'אפס (ZERO)',
+    simEven: 'זוגי',
+    simOdd: 'אי-זוגי',
+    simRecentSpins: 'סיבובי גלגל אחרונים',
+    simSpinsLogged: 'סיבובים מתועדים',
+    simNoSpinsYet: 'אין סיבובים עדיין. הצב הימורים ולחץ סובב גלגל.',
+    simWinningHits: 'פגיעות זוכות:',
+    simSpinWheel: 'סובב גלגל',
+    simClearBets: 'נקה הימורים',
+    simDouble: 'הכפל',
+    simRebet: 'הימור חוזר',
+
+    // Additional Roulette & Table labels
+    advPlayTelemetry: 'טלמטריית יתרון סטטיסטי',
+    tableFeltBettingSpot: 'אזור הצבת הימורים על הלבד',
+    clickAnyNumberHelp: '(לחץ על מספר או אזור להצבת ז\'יטונים)',
+    totalWagerLabel: 'סך הכל הימור',
+    spinningWheel: 'הגלגל מסתובב...',
+    placeBetsToSpin: 'הצב הימורים כדי לסובב',
+
+    // Additional Summary Modal labels
+    summaryCreditsSuffix: 'קרדיטים 🪙',
+    summaryLost: 'הפסד',
+    summaryYourAction: 'החלטה שלך',
+    summaryGtoOptimal: 'אופטימלי לפי GTO',
+    summaryWon: 'רווח',
+    summaryNoWins: 'עדיין לא תועדו מהלכים רווחיים משמעותיים.',
+    summaryTelemetryHeader: 'מדדים ומיומנות לפי משחק',
+    summaryRounds: 'סיבובים',
+    summaryAccuracy: 'דיוק',
+    summaryAutopsyHeader: 'תחקיר טעויות (זוהו {count} דליפות)',
+    summaryFilterAll: 'הכל',
+    summaryNoMistakesCat: 'אין טעויות בקטגוריה זו!',
+    summaryStartNewBtn: 'התחל אימון חדש',
+    summaryResumePlay: 'המשך משחק',
+    summaryCloseAutopsy: 'סגור תחקיר',
+    summaryHub: 'ראשי',
+
+    // Slot Machine Drill
+    gridLabel: 'רשת:',
+    evBreachDetected: 'זוהה יתרון חיובי +EV',
+    evSubThreshold: '-EV מתחת לסף הכדאיות',
+    mustHitByCap: 'תקרת חובה MUST-HIT-BY',
+    currentProgressiveMeter: 'מד ג\'קפוט פרוגרסיבי נוכחי',
+    distanceToCap: 'מרחק לתקרה ΔJ',
+    breakEvenThresholdLabel: 'סף רווחיות',
+    capLabel: 'תקרה',
+    formatLabel: 'פורמט',
+    reelsRowsFormat: 'פורמט: {cols} גלגלים × {rows} שורות',
+    activePaylinesLabel: 'קווי תשלום פעילים',
+    paylineWinLabel: 'זכייה בקו תשלום!',
+    mustHitByTriggeredLabel: 'ג\'קפוט חובה הופעל!',
+    casinoFloorCall: 'החלטת רצפת קזינו: האם למכונה יתרון חיובי (+EV) או מלכודת קזינו (-EV)?',
+    betLabel: 'הימור',
+    attackMachineBtn: 'תקוף מכונה (+EV)',
+    walkAwayPassBtn: 'התרחק ועבור הלאה (-EV)',
+    spinGridBtn: 'סובב רשת',
+    spinningStatus: 'מסתובב...',
+    scoutBonus: '+50 קרדיטים בונוס סריקה',
+    leakPenalty: '-50 קרדיטים קנס דליפה',
+    nextMachineBtn: 'המכונה הבאה',
+    machineLabel: 'מכונה',
+    scoutingMachineCount: 'סורק מכונה',
+
+    // Blackjack Lab & Table
+    tabCasinoTable: 'שולחן קזינו',
+    tabStrategyMatrix: 'מטריצת אסטרטגיה',
+    tabHowItWorks: 'איך זה עובד',
+    hideCountHud: 'הסתר מד ספירה',
+    showCountHud: 'הצג מד ספירה',
+    advisorOn: 'יועץ פעיל',
+    advisorOff: 'יועץ כבוי',
+    runningCount: 'ספירה רצה',
+    decksRemaining: 'חפיסות שנותרו',
+    trueCount: 'ספירה אמיתית',
+    playerEdge: 'יתרון שחקן',
+    dealerTotal: 'סך הכל דילר',
+    playerTotal: 'סך הכל שחקן',
+    betToDeal: 'הימור לחלוקה',
+    clearBet: 'נקה הימור',
+    dealHand: 'חלק קלפים',
+    doubleBet: 'הימור כפול (2X)',
+    gtoAdvisorRec: 'המלצת יועץ GTO',
+    matrixTitle: 'מטריצת אסטרטגיה בסיסית (6 חפיסות, S17)',
+    matrixSubtitle: 'מטריצת ההחלטות המוכחת מתמטית לכל שילוב בין יד השחקן לקלף הדילר.',
+
+    // Card Counting Academy
+    countingAcademyTitle: 'אקדמיית ספירת קלפים (מאפס למקצוען)',
+    countingAcademySubtitle: 'שלוט במערכת הספירה המתמטית המדויקת שהופכת את יתרון הקזינו לטובתך',
+    tabSecret: '0. הסוד',
+    tabHiLo: '1. היי-לו',
+    tabTrueCount: '2. ספירה אמיתית',
+    tabBetSpread: '3. פיזור הימורים',
+    tabPractice: '⚡ תרגול מעשי',
+    whatIsCardTag: 'מהו ערך היי-לו (Hi-Lo) של קלף זה?',
+    resetShoe: 'איפוס סוללה',
+    streakLabel: 'רצף'
   }
 };

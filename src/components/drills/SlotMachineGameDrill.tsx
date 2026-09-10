@@ -431,7 +431,7 @@ export const SlotMachineGameDrill: React.FC<SlotMachineGameDrillProps> = ({
 
         {/* Grid Selector (Multiple Rows and Columns) */}
         <div className="flex items-center gap-1.5 bg-[#070B13] p-1 rounded-xl border border-[#1E2C44]">
-          <span className="text-[10px] text-slate-400 font-arcade px-1">GRID:</span>
+          <span className="text-[10px] text-slate-400 font-arcade px-1">{t.gridLabel}</span>
           {GRID_PRESETS.map(preset => (
             <button
               key={preset.label}
@@ -456,7 +456,7 @@ export const SlotMachineGameDrill: React.FC<SlotMachineGameDrillProps> = ({
             className="flex items-center gap-1 px-2.5 py-1 rounded-lg bg-[#111C2E] hover:bg-[#182842] border border-amber-400/30 text-amber-300 font-arcade text-[10px] cursor-pointer transition-colors"
           >
             <Sparkles className="w-3 h-3 text-amber-400" />
-            <span>Zero to Hero Guide</span>
+            <span>{t.simZeroToHeroBtn}</span>
           </button>
 
           <span
@@ -466,7 +466,7 @@ export const SlotMachineGameDrill: React.FC<SlotMachineGameDrillProps> = ({
                 : 'bg-rose-950/80 border-rose-500/50 text-rose-300'
             }`}
           >
-            {advantageMath.isPositiveEV ? '+EV BREACH DETECTED' : '-EV SUB-THRESHOLD'}
+            {advantageMath.isPositiveEV ? t.evBreachDetected : t.evSubThreshold}
           </span>
         </div>
       </div>
@@ -545,7 +545,7 @@ export const SlotMachineGameDrill: React.FC<SlotMachineGameDrillProps> = ({
           }`}
         >
           <div className="flex items-center justify-between text-[11px] font-arcade text-slate-400 mb-1 px-2">
-            <span>MUST HIT BY CAP: ${activeScenario.cap.toFixed(2)}</span>
+            <span>{t.mustHitByCap}: ${activeScenario.cap.toFixed(2)}</span>
             <span className="text-amber-400 font-bold">
               RTP: {(activeScenario.baseRtp * 100).toFixed(0)}% • METER: {(activeScenario.meterRate * 100).toFixed(1)}%
             </span>
@@ -553,13 +553,13 @@ export const SlotMachineGameDrill: React.FC<SlotMachineGameDrillProps> = ({
 
           <div className="py-1">
             <span className="text-[10px] text-amber-300 font-arcade tracking-widest block uppercase">
-              CURRENT PROGRESSIVE JACKPOT METER
+              {t.currentProgressiveMeter}
             </span>
             <div className="text-3xl sm:text-4xl font-black font-mono-telemetry tracking-wider text-white drop-shadow-md">
               ${currentMeter.toFixed(2)}
             </div>
             <div className="text-xs font-mono-telemetry mt-0.5 text-slate-300">
-              Distance to Cap ΔJ ={' '}
+              {t.distanceToCap} ={' '}
               <strong className="text-amber-300">
                 ${(activeScenario.cap - currentMeter).toFixed(2)}
               </strong>
@@ -571,7 +571,7 @@ export const SlotMachineGameDrill: React.FC<SlotMachineGameDrillProps> = ({
             <div className="flex items-center justify-between text-[10px] font-mono-telemetry text-slate-400 mb-1">
               <span>$0.00</span>
               <span className="text-amber-300 font-bold">
-                Break-Even $J_b$: ${advantageMath.breakevenThreshold.toFixed(2)}
+                {t.breakEvenThresholdLabel}: ${advantageMath.breakevenThreshold.toFixed(2)}
               </span>
               <span>Cap ${activeScenario.cap.toFixed(2)}</span>
             </div>
@@ -601,7 +601,7 @@ export const SlotMachineGameDrill: React.FC<SlotMachineGameDrillProps> = ({
         <div className="p-3 bg-[#05080F] rounded-2xl border-2 border-[#1E2B42] shadow-inner space-y-2">
           <div className="flex items-center justify-between px-2 text-[10px] font-mono-telemetry text-slate-400">
             <span>
-              FORMAT: <strong>{selectedGrid.cols} REELS × {selectedGrid.rows} ROWS</strong>
+              {t.reelsRowsFormat.replace('{cols}', selectedGrid.cols.toString()).replace('{rows}', selectedGrid.rows.toString())}
             </span>
             <div className="flex items-center gap-2">
               <button
@@ -610,10 +610,10 @@ export const SlotMachineGameDrill: React.FC<SlotMachineGameDrillProps> = ({
                 className="px-2 py-0.5 rounded-lg bg-[#111B2C] hover:bg-[#1C2C46] border border-[#25395A] text-amber-300 text-[10px] font-arcade flex items-center gap-1 cursor-pointer transition-colors"
               >
                 <BookOpen className="w-3 h-3 text-amber-400" />
-                <span>Zero to Hero Guide</span>
+                <span>{t.simZeroToHeroBtn}</span>
                 <ChevronDown className={`w-3 h-3 transition-transform ${showGameGuide ? 'rotate-180' : ''}`} />
               </button>
-              <span>ACTIVE PAYLINES: {selectedGrid.paylines}</span>
+              <span>{t.activePaylinesLabel}: {selectedGrid.paylines}</span>
             </div>
           </div>
 
@@ -716,11 +716,11 @@ export const SlotMachineGameDrill: React.FC<SlotMachineGameDrillProps> = ({
         <div className="space-y-2 pt-1 border-t border-[#22314A]">
           <div className="flex items-center justify-between text-xs font-arcade">
             <span className="text-slate-300">
-              CASINO FLOOR CALL: Is this slot +EV Advantage or a -EV House Trap?
+              {t.casinoFloorCall}
             </span>
             <div className="flex items-center gap-1.5 text-amber-400 font-mono-telemetry">
               <CasinoChipStack amount={betSize} size="xs" animationState={chipAnimState} />
-              <span>Bet: {betSize} CR</span>
+              <span>{t.betLabel}: {betSize} CR</span>
             </div>
           </div>
 
@@ -737,7 +737,7 @@ export const SlotMachineGameDrill: React.FC<SlotMachineGameDrillProps> = ({
               }`}
             >
               <Zap className="w-4 h-4 text-slate-950" />
-              ATTACK MACHINE (+EV)
+              {t.attackMachineBtn}
             </button>
 
             <button
@@ -752,7 +752,7 @@ export const SlotMachineGameDrill: React.FC<SlotMachineGameDrillProps> = ({
               }`}
             >
               <RotateCcw className="w-4 h-4 text-slate-400" />
-              WALK AWAY & PASS (-EV)
+              {t.walkAwayPassBtn}
             </button>
           </div>
 
@@ -760,7 +760,7 @@ export const SlotMachineGameDrill: React.FC<SlotMachineGameDrillProps> = ({
           {userCall === 'ATTACK' && (
             <div className="flex flex-wrap items-center justify-between gap-2 pt-2 border-t border-[#1C2A40]">
               <div className="flex items-center gap-2">
-                <span className="text-[11px] text-slate-400 font-arcade">BET:</span>
+                <span className="text-[11px] text-slate-400 font-arcade">{t.betLabel}:</span>
                 <CasinoChipStack amount={betSize} size="xs" animationState={chipAnimState} />
                 {[5, 10, 25, 50].map(b => (
                   <button
@@ -787,7 +787,7 @@ export const SlotMachineGameDrill: React.FC<SlotMachineGameDrillProps> = ({
                 className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-300 hover:to-amber-400 disabled:opacity-50 text-slate-950 font-arcade font-bold text-xs tracking-wider flex items-center gap-1.5 shadow-md active:scale-95 cursor-pointer"
               >
                 <Sparkles className="w-4 h-4" />
-                {isSpinning ? 'SPINNING...' : `SPIN GRID (${betSize} CR)`}
+                {isSpinning ? t.spinningWheel : `${t.spinGridBtn} (${betSize} CR)`}
               </button>
             </div>
           )}
@@ -818,7 +818,7 @@ export const SlotMachineGameDrill: React.FC<SlotMachineGameDrillProps> = ({
               )}
             </h4>
             <span className="px-2 py-0.5 rounded font-mono-telemetry font-bold text-xs bg-black/40 border border-white/10">
-              {evaluation.isCorrect ? '+50 CR SCOUT BONUS' : '-50 CR LEAK PENALTY'}
+              {evaluation.isCorrect ? t.scoutBonus : t.leakPenalty}
             </span>
           </div>
 
@@ -832,13 +832,13 @@ export const SlotMachineGameDrill: React.FC<SlotMachineGameDrillProps> = ({
 
           <div className="flex items-center justify-between pt-1 border-t border-white/10">
             <span className="text-[11px] text-slate-400 font-arcade">
-              Machine: <strong className="text-white">{activeScenario.machineTitle}</strong>
+              {t.machineLabel}: <strong className="text-white">{activeScenario.machineTitle}</strong>
             </span>
             <button
               onClick={handleNext}
               className="px-4 py-2 rounded-xl bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-300 hover:to-amber-400 text-slate-950 font-arcade font-bold text-xs tracking-wider flex items-center gap-1 shadow-md active:scale-95 cursor-pointer"
             >
-              NEXT MACHINE <ChevronRight className="w-4 h-4" />
+              {t.nextMachineBtn} <ChevronRight className="w-4 h-4" />
             </button>
           </div>
         </div>

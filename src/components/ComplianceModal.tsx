@@ -1,5 +1,6 @@
 import React from 'react';
 import { X, ShieldAlert, Scale, AlertTriangle, BookOpen, CheckCircle2 } from 'lucide-react';
+import { useLanguage } from '../i18n/LanguageContext';
 
 interface ComplianceModalProps {
   isOpen: boolean;
@@ -7,6 +8,7 @@ interface ComplianceModalProps {
 }
 
 export const ComplianceModal: React.FC<ComplianceModalProps> = ({ isOpen, onClose }) => {
+  const { t } = useLanguage();
   if (!isOpen) return null;
 
   return (
@@ -19,10 +21,10 @@ export const ComplianceModal: React.FC<ComplianceModalProps> = ({ isOpen, onClos
             </div>
             <div>
               <h2 className="text-sm font-bold text-white uppercase tracking-wider font-mono-telemetry">
-                Regulatory Compliance & Statutory Framework
+                {t.complianceHeader}
               </h2>
               <p className="text-xs text-slate-400">
-                Nevada NRS 465.075 • Apple App Store 5.3.4 • Research & Simulation Only
+                {t.complianceSub}
               </p>
             </div>
           </div>
@@ -39,10 +41,10 @@ export const ComplianceModal: React.FC<ComplianceModalProps> = ({ isOpen, onClos
           <div className="p-3 rounded-lg bg-[#2A1215] border border-[#FF1744]/40 text-[#FF8080]">
             <div className="flex items-center gap-2 font-bold font-mono-telemetry uppercase text-[11px] mb-1 text-[#FF5252]">
               <AlertTriangle className="w-4 h-4 text-[#FF1744]" />
-              Nevada Revised Statutes (NRS) 465.075 & 465.088
+              {t.complianceStatuteTitle}
             </div>
             <p>
-              Under Nevada law, it is a <strong>Category B felony</strong> (punishable by 1 to 10 years imprisonment and up to $10,000 fines per violation) to use or possess any computerized hardware or software at a licensed gaming establishment to project outcomes, track cards, or calculate playing or betting strategies during live play.
+              {t.complianceStatuteBody}
             </p>
           </div>
 
@@ -50,12 +52,12 @@ export const ComplianceModal: React.FC<ComplianceModalProps> = ({ isOpen, onClos
           <div className="p-3 rounded-lg bg-[#121620] border border-[#1E2638]">
             <div className="flex items-center gap-2 font-bold font-mono-telemetry uppercase text-[11px] mb-1.5 text-[#00F2FE]">
               <Scale className="w-4 h-4 text-[#00F2FE]" />
-              Platform Certification & Scope
+              {t.complianceCertTitle}
             </div>
             <ul className="space-y-1.5 text-slate-300 list-disc list-inside">
-              <li><strong>Zero Real-Money Wagering:</strong> Operates strictly on virtual simulation credits. No financial deposits or withdrawals.</li>
-              <li><strong>No Real-Time In-Venue Assistance (RTA):</strong> All simulation engines are intended for offline study, mathematical audits, and pedagogical training.</li>
-              <li><strong>App Store 5.3.4 & Google Play Compliant:</strong> Categorized as a Quantitative Gaming Simulator & Statistical Analysis Tool.</li>
+              <li>{t.complianceCertItem1}</li>
+              <li>{t.complianceCertItem2}</li>
+              <li>{t.complianceCertItem3}</li>
             </ul>
           </div>
 
@@ -63,19 +65,19 @@ export const ComplianceModal: React.FC<ComplianceModalProps> = ({ isOpen, onClos
           <div className="p-3 rounded-lg bg-[#121620] border border-[#1E2638]">
             <div className="flex items-center gap-2 font-bold font-mono-telemetry uppercase text-[11px] mb-2 text-[#00E676]">
               <BookOpen className="w-4 h-4 text-[#00E676]" />
-              Mathematical Feasibility Breakdown
+              {t.complianceMathTitle}
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-[11px]">
               <div className="p-2 rounded bg-[#07090E] border border-red-900/40">
-                <span className="font-semibold text-red-400 block mb-1">Memoryless Independent Games:</span>
+                <span className="font-semibold text-red-400 block mb-1">{t.complianceMathMemorylessTitle}</span>
                 <p className="text-slate-400">
-                  Roulette, Craps, Sic Bo, & Standard Spins. Probability of outcome is identical each round: <span className="font-mono text-slate-300">P(X_t|X_1..X_t-1) = P(X_t)</span>. No software can eliminate the house edge.
+                  {t.complianceMathMemorylessBody}
                 </p>
               </div>
               <div className="p-2 rounded bg-[#07090E] border border-emerald-900/40">
-                <span className="font-semibold text-emerald-400 block mb-1">Dependent & State-Based Games:</span>
+                <span className="font-semibold text-emerald-400 block mb-1">{t.complianceMathDependentTitle}</span>
                 <p className="text-slate-400">
-                  Shoe Blackjack (Hypergeometric sampling without replacement), PvP Poker (CFR+ Game Theory), and Must-Hit-By Progressive Slots have mathematical state thresholds yielding positive expectation (+EV).
+                  {t.complianceMathDependentBody}
                 </p>
               </div>
             </div>
@@ -88,7 +90,7 @@ export const ComplianceModal: React.FC<ComplianceModalProps> = ({ isOpen, onClos
             className="flex items-center gap-1.5 px-4 py-2 rounded-lg bg-[#00F2FE] hover:bg-[#00d8e4] text-[#07090E] font-bold text-xs uppercase tracking-wider font-mono-telemetry transition-colors cursor-pointer"
           >
             <CheckCircle2 className="w-4 h-4" />
-            Understood & Acknowledged
+            {t.complianceAckBtn}
           </button>
         </div>
       </div>

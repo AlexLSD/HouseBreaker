@@ -4,22 +4,14 @@ import {
   AlertTriangle,
   ArrowLeft,
   Award,
-  CheckCircle2,
-  ChevronRight,
-  Coins,
-  DollarSign,
-  Flame,
   RotateCcw,
-  Shield,
-  Sparkles,
   TrendingDown,
   TrendingUp,
-  Trophy,
-  X,
-  Zap
+  X
 } from 'lucide-react';
 import { SessionSummaryData, DrillGameMode } from '../../types/drillTypes';
 import { sounds } from '../../utils/soundEffects';
+import { useLanguage } from '../../i18n/LanguageContext';
 
 interface DrillSummaryModalProps {
   isOpen: boolean;
@@ -36,6 +28,7 @@ export const DrillSummaryModal: React.FC<DrillSummaryModalProps> = ({
   onClose,
   onNavigateTab
 }) => {
+  const { t } = useLanguage();
   const [filterGame, setFilterGame] = useState<'ALL' | DrillGameMode>('ALL');
 
   useEffect(() => {
@@ -76,7 +69,7 @@ export const DrillSummaryModal: React.FC<DrillSummaryModalProps> = ({
             onClose();
           }}
           className="absolute top-4 right-4 p-2 rounded-xl bg-[#141F33] hover:bg-[#1E2F4C] border border-[#2D3F5E] text-slate-400 hover:text-white transition-all cursor-pointer shadow-sm active:scale-95 z-10"
-          title="Close summary"
+          title={t.closeBtn}
         >
           <X className="w-4 h-4" />
         </button>
@@ -92,12 +85,12 @@ export const DrillSummaryModal: React.FC<DrillSummaryModalProps> = ({
             {summary.isBusted ? (
               <>
                 <AlertTriangle className="w-4 h-4 text-rose-400" />
-                <span className="text-rose-300">BANKROLL DEPLETED - BUSTED!</span>
+                <span className="text-rose-300">{t.summaryBusted}</span>
               </>
             ) : (
               <>
                 <Award className="w-4 h-4 text-emerald-400" />
-                <span className="text-emerald-300">DRILL CASHED OUT SECURELY</span>
+                <span className="text-emerald-300">{t.summaryCashedOut}</span>
               </>
             )}
           </div>
@@ -105,12 +98,12 @@ export const DrillSummaryModal: React.FC<DrillSummaryModalProps> = ({
           <div className="py-1">
             <h2 className="text-2xl sm:text-3xl font-black font-mono-telemetry tracking-wide text-white">
               {summary.netCredits >= 0 ? `+${summary.netCredits.toLocaleString()}` : summary.netCredits.toLocaleString()}{' '}
-              <span className="text-lg text-amber-300">CREDITS</span>
+              <span className="text-lg text-amber-300">{t.summaryCreditsSuffix}</span>
             </h2>
             <div className="flex items-center justify-center gap-3 text-xs font-mono-telemetry mt-1 text-slate-300">
-              <span>Start: {summary.initialCredits.toLocaleString()}</span>
+              <span>{t.summaryStart}: {summary.initialCredits.toLocaleString()}</span>
               <span>→</span>
-              <span>End: {summary.finalCredits.toLocaleString()}</span>
+              <span>{t.summaryEnd}: {summary.finalCredits.toLocaleString()}</span>
               <span className={`px-2 py-0.5 rounded font-bold ${
                 isProfit ? 'bg-emerald-500/20 text-emerald-300' : 'bg-rose-500/20 text-rose-300'
               }`}>
@@ -121,7 +114,7 @@ export const DrillSummaryModal: React.FC<DrillSummaryModalProps> = ({
 
           {/* Skill Grade Badge */}
           <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-xl bg-black/50 border border-amber-500/30">
-            <span className="text-xs text-slate-400 font-arcade">PERFORMANCE TIER:</span>
+            <span className="text-xs text-slate-400 font-arcade">{t.summaryTier}</span>
             <span className={`font-mono-telemetry font-black text-sm px-2 py-0.5 rounded ${summary.skillRank.badgeColor}`}>
               {summary.skillRank.grade} • {summary.skillRank.title}
             </span>
@@ -135,7 +128,7 @@ export const DrillSummaryModal: React.FC<DrillSummaryModalProps> = ({
             <div className="flex items-center justify-between text-xs font-arcade text-rose-300">
               <span className="flex items-center gap-1.5 font-bold">
                 <TrendingDown className="w-4 h-4 text-rose-400" />
-                WHERE YOU LOST THE MOST
+                {t.summaryLostMost}
               </span>
               {summary.worstLeakGame && (
                 <span className="px-2 py-0.5 rounded bg-rose-950 text-rose-300 border border-rose-500/30 text-[10px]">
@@ -150,7 +143,7 @@ export const DrillSummaryModal: React.FC<DrillSummaryModalProps> = ({
                   {summary.worstSingleMistake.scenarioName}
                 </p>
                 <div className="text-[11px] font-mono-telemetry text-rose-300">
-                  Cost: <strong>-{summary.worstSingleMistake.creditsLost} credits</strong> | Action: {summary.worstSingleMistake.userDecision} (Expected: {summary.worstSingleMistake.expectedDecision})
+                  {t.summaryLost}: <strong>-{summary.worstSingleMistake.creditsLost} CR</strong> | {t.summaryYourAction}: {summary.worstSingleMistake.userDecision} ({t.summaryGtoOptimal}: {summary.worstSingleMistake.expectedDecision})
                 </div>
                 <p className="text-[11px] text-slate-400 leading-relaxed">
                   {summary.worstSingleMistake.explanation}
@@ -158,7 +151,7 @@ export const DrillSummaryModal: React.FC<DrillSummaryModalProps> = ({
               </div>
             ) : (
               <p className="text-xs text-slate-400">
-                Zero critical mistakes recorded! You navigated all drill scenarios accurately without major leaks.
+                {t.summaryNoMistakes}
               </p>
             )}
           </div>
@@ -168,7 +161,7 @@ export const DrillSummaryModal: React.FC<DrillSummaryModalProps> = ({
             <div className="flex items-center justify-between text-xs font-arcade text-emerald-300">
               <span className="flex items-center gap-1.5 font-bold">
                 <TrendingUp className="w-4 h-4 text-emerald-400" />
-                WHERE YOU WON THE MOST
+                {t.summaryWonMost}
               </span>
               {summary.mostProfitableGame && (
                 <span className="px-2 py-0.5 rounded bg-emerald-950 text-emerald-300 border border-emerald-500/30 text-[10px]">
@@ -183,7 +176,7 @@ export const DrillSummaryModal: React.FC<DrillSummaryModalProps> = ({
                   {summary.earnings[0].scenarioName}
                 </p>
                 <div className="text-[11px] font-mono-telemetry text-emerald-300">
-                  Payout: <strong>+{summary.earnings[0].creditsWon} credits</strong>
+                  {t.summaryWon}: <strong>+{summary.earnings[0].creditsWon} CR</strong>
                 </div>
                 <p className="text-[11px] text-slate-400 leading-relaxed">
                   {summary.earnings[0].reason}
@@ -191,7 +184,7 @@ export const DrillSummaryModal: React.FC<DrillSummaryModalProps> = ({
               </div>
             ) : (
               <p className="text-xs text-slate-400">
-                No winning hands or spins locked in this run. Re-enter and capitalize on positive EV edges!
+                {t.summaryNoWins}
               </p>
             )}
           </div>
@@ -200,7 +193,7 @@ export const DrillSummaryModal: React.FC<DrillSummaryModalProps> = ({
         {/* Game By Game Ledger Breakdown */}
         <div className="p-3.5 rounded-2xl bg-[#0A101C] border border-[#1E2E48] space-y-2">
           <span className="text-xs font-arcade text-slate-300 uppercase tracking-wide block">
-            GAME-BY-GAME PERFORMANCE TELEMETRY
+            {t.summaryTelemetryHeader}
           </span>
 
           <div className="grid grid-cols-3 gap-2 text-center text-xs">
@@ -216,10 +209,10 @@ export const DrillSummaryModal: React.FC<DrillSummaryModalProps> = ({
                     {net >= 0 ? `+${net}` : net} CR
                   </div>
                   <div className="text-[10px] text-slate-400 font-mono-telemetry">
-                    Won: +{m.creditsWon} | Lost: -{m.creditsLost}
+                    {t.summaryWon}: +{m.creditsWon} | {t.summaryLost}: -{m.creditsLost}
                   </div>
                   <div className="text-[9px] text-slate-500 font-arcade">
-                    {m.handsPlayed} rounds • {m.handsPlayed > 0 ? Math.round((m.correctDecisions / m.handsPlayed) * 100) : 0}% acc
+                    {m.handsPlayed} {t.summaryRounds} • {m.handsPlayed > 0 ? Math.round((m.correctDecisions / m.handsPlayed) * 100) : 0}% {t.summaryAccuracy}
                   </div>
                 </div>
               );
@@ -232,7 +225,7 @@ export const DrillSummaryModal: React.FC<DrillSummaryModalProps> = ({
           <div className="flex items-center justify-between">
             <span className="text-xs font-arcade text-slate-300 uppercase flex items-center gap-1.5">
               <AlertCircle className="w-4 h-4 text-rose-400" />
-              MISTAKES AUTOPSY ({summary.mistakes.length} LEAKS DETECTED)
+              {t.summaryAutopsyHeader.replace('{count}', summary.mistakes.length.toString())}
             </span>
 
             <div className="flex items-center gap-1">
@@ -246,7 +239,7 @@ export const DrillSummaryModal: React.FC<DrillSummaryModalProps> = ({
                       : 'bg-[#121A28] text-slate-400 hover:text-white'
                   }`}
                 >
-                  {f}
+                  {f === 'ALL' ? t.summaryFilterAll : f}
                 </button>
               ))}
             </div>
@@ -255,7 +248,7 @@ export const DrillSummaryModal: React.FC<DrillSummaryModalProps> = ({
           <div className="space-y-2 max-h-48 overflow-y-auto pr-1">
             {filteredMistakes.length === 0 ? (
               <div className="p-4 rounded-xl bg-[#091512] border border-emerald-500/30 text-center text-xs text-emerald-300 font-arcade">
-                ✨ No mistakes recorded in this category! Pristine tactical execution.
+                {t.summaryNoMistakesCat}
               </div>
             ) : (
               filteredMistakes.map(m => (
@@ -271,11 +264,11 @@ export const DrillSummaryModal: React.FC<DrillSummaryModalProps> = ({
                   </div>
                   <div className="flex items-center gap-2 text-[11px] font-mono-telemetry text-slate-300">
                     <span className="px-1.5 py-0.2 rounded bg-rose-950 text-rose-300 border border-rose-500/30">
-                      Your Action: {m.userDecision}
+                      {t.summaryYourAction}: {m.userDecision}
                     </span>
                     <span>→</span>
                     <span className="px-1.5 py-0.2 rounded bg-emerald-950 text-emerald-300 border border-emerald-500/30">
-                      GTO Optimal: {m.expectedDecision}
+                      {t.summaryGtoOptimal}: {m.expectedDecision}
                     </span>
                   </div>
                   <p className="text-[11px] text-slate-400 leading-relaxed pt-0.5">
@@ -294,7 +287,7 @@ export const DrillSummaryModal: React.FC<DrillSummaryModalProps> = ({
             className="flex-1 py-3 px-4 rounded-2xl bg-gradient-to-r from-emerald-500 via-teal-500 to-emerald-600 hover:from-emerald-400 hover:to-teal-400 text-slate-950 font-arcade font-bold text-xs tracking-wider flex items-center justify-center gap-2 shadow-lg active:scale-98 cursor-pointer"
           >
             <RotateCcw className="w-4 h-4" />
-            START NEW DRILL SESSION
+            {t.summaryStartNewBtn}
           </button>
 
           {!summary.isBusted ? (
@@ -302,14 +295,14 @@ export const DrillSummaryModal: React.FC<DrillSummaryModalProps> = ({
               onClick={onClose}
               className="px-5 py-3 rounded-2xl bg-[#172236] hover:bg-[#202E48] text-slate-300 hover:text-white border border-[#2D3F5E] font-arcade font-bold text-xs tracking-wider cursor-pointer active:scale-98"
             >
-              RESUME PLAY
+              {t.summaryResumePlay}
             </button>
           ) : (
             <button
               onClick={onClose}
               className="px-4 py-3 rounded-2xl bg-[#172236] hover:bg-[#202E48] text-slate-300 hover:text-white border border-[#2D3F5E] font-arcade font-bold text-xs tracking-wider cursor-pointer active:scale-98"
             >
-              CLOSE AUTOPSY
+              {t.summaryCloseAutopsy}
             </button>
           )}
 
@@ -322,7 +315,7 @@ export const DrillSummaryModal: React.FC<DrillSummaryModalProps> = ({
               className="px-4 py-3 rounded-2xl bg-[#181528] hover:bg-[#251E3E] text-purple-300 hover:text-purple-200 border border-purple-500/30 font-arcade font-bold text-xs flex items-center justify-center gap-1.5 cursor-pointer active:scale-98"
             >
               <ArrowLeft className="w-3.5 h-3.5" />
-              HUB
+              {t.summaryHub}
             </button>
           )}
         </div>

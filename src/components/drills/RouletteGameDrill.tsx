@@ -58,7 +58,7 @@ export const RouletteGameDrill: React.FC<RouletteGameDrillProps> = ({
   onMistake,
   onCorrect
 }) => {
-  const { language } = useLanguage();
+  const { language, t } = useLanguage();
   const [variant, setVariant] = useState<RouletteVariant>('EUROPEAN');
   const [bets, setBets] = useState<RouletteBet[]>([]);
   const [lastBets, setLastBets] = useState<RouletteBet[]>([]);
@@ -240,14 +240,14 @@ export const RouletteGameDrill: React.FC<RouletteGameDrillProps> = ({
           <div>
             <div className="flex items-center gap-1.5">
               <h2 className="text-sm font-bold text-white font-arcade uppercase tracking-wider">
-                Live Roulette Table Simulation
+                {t.simLiveRouletteTitle}
               </h2>
               <span className="text-[9px] px-1.5 py-0.5 rounded bg-amber-400/20 text-amber-300 font-mono-telemetry border border-amber-400/40">
-                ACTIVE FELT
+                {t.simActiveFelt}
               </span>
             </div>
             <p className="text-[11px] text-slate-400">
-              Place real chips on the felt layout, spin the wheel & experience authentic casino physics
+              {t.simLiveRouletteSub}
             </p>
           </div>
         </div>
@@ -260,7 +260,7 @@ export const RouletteGameDrill: React.FC<RouletteGameDrillProps> = ({
             className="px-2.5 py-1.5 rounded-xl bg-[#111C2E] hover:bg-[#182842] border border-amber-400/30 text-amber-300 font-arcade text-[10px] flex items-center gap-1 cursor-pointer transition-colors"
           >
             <Sparkles className="w-3.5 h-3.5 text-amber-400" />
-            <span>Zero to Hero Guide</span>
+            <span>{t.simZeroToHeroBtn}</span>
           </button>
 
           <div className="p-1.5 rounded-xl bg-[#08101A] border border-[#1A2638] flex items-center gap-1">
@@ -286,7 +286,7 @@ export const RouletteGameDrill: React.FC<RouletteGameDrillProps> = ({
           </div>
 
           <div className="px-3 py-1.5 rounded-xl bg-black/50 border border-[#1E2E48] text-right">
-            <span className="text-[9px] text-slate-400 font-arcade block">HOUSE EDGE</span>
+            <span className="text-[9px] text-slate-400 font-arcade block">{t.houseEdge}</span>
             <span className="text-[11px] font-mono-telemetry font-bold text-amber-300">
               {houseEdgeText}
             </span>
@@ -360,7 +360,7 @@ export const RouletteGameDrill: React.FC<RouletteGameDrillProps> = ({
         <div className="lg:col-span-7 flex flex-col items-center justify-center p-3 sm:p-4 rounded-3xl bg-gradient-to-b from-[#08130E] via-[#05140C] to-[#040C08] border-2 border-emerald-500/30 shadow-2xl relative overflow-hidden">
           <div className="absolute top-2 left-3 flex items-center gap-1.5 text-[10px] text-emerald-400 font-arcade">
             <Sparkles className="w-3.5 h-3.5" />
-            <span>PHYSICS WHEEL ENGINE</span>
+            <span>{t.simPhysicsEngine}</span>
           </div>
 
           <div className="my-2 scale-90 sm:scale-100">
@@ -375,7 +375,7 @@ export const RouletteGameDrill: React.FC<RouletteGameDrillProps> = ({
           {/* Winning Pocket Result Announcement */}
           {winningPocket && !isSpinningWheel && (
             <div className="flex items-center gap-2 mt-1 px-3 py-1 rounded-xl bg-black/80 border border-amber-400/50 animate-fade-in shadow-lg">
-              <span className="text-[10px] text-slate-400 font-arcade">RESULT:</span>
+              <span className="text-[10px] text-slate-400 font-arcade">{t.simResult}</span>
               <span
                 className={`w-6 h-6 rounded-full flex items-center justify-center font-bold text-xs text-white shadow-md ${
                   winningPocket.color === 'red'
@@ -388,7 +388,7 @@ export const RouletteGameDrill: React.FC<RouletteGameDrillProps> = ({
                 {winningPocket.value}
               </span>
               <span className="font-arcade text-xs text-amber-300 font-bold uppercase">
-                {winningPocket.color} {winningPocket.value === 0 || winningPocket.value === '00' ? 'ZERO' : winningPocket.isEven ? 'EVEN' : 'ODD'}
+                {winningPocket.color} {winningPocket.value === 0 || winningPocket.value === '00' ? t.simZero : winningPocket.isEven ? t.simEven : t.simOdd}
               </span>
             </div>
           )}
@@ -413,7 +413,7 @@ export const RouletteGameDrill: React.FC<RouletteGameDrillProps> = ({
               </div>
               {lastSpinResult && lastSpinResult.winningBets.length > 0 && (
                 <div className="mt-2 space-y-1 pt-2 border-t border-emerald-500/30 text-[11px] font-mono-telemetry">
-                  <div className="text-emerald-300 font-bold">Winning Hits:</div>
+                  <div className="text-emerald-300 font-bold">{t.simWinningHits}</div>
                   {lastSpinResult.winningBets.map((wb, idx) => (
                     <div key={idx} className="flex justify-between text-slate-200">
                       <span>• {wb.bet.label} ({wb.bet.payoutRatio}:1)</span>
@@ -430,16 +430,16 @@ export const RouletteGameDrill: React.FC<RouletteGameDrillProps> = ({
             <div className="flex items-center justify-between mb-2">
               <span className="text-[10px] text-slate-400 font-arcade uppercase flex items-center gap-1">
                 <History className="w-3.5 h-3.5 text-amber-400" />
-                RECENT WHEEL SPINS
+                {t.simRecentSpins}
               </span>
               <span className="text-[9px] text-slate-500 font-mono-telemetry">
-                {history.length} SPINS LOGGED
+                {history.length} {t.simSpinsLogged}
               </span>
             </div>
 
             {history.length === 0 ? (
               <div className="text-center py-2 text-[11px] text-slate-500 font-mono-telemetry">
-                No spins yet. Place bets and press SPIN WHEEL.
+                {t.simNoSpinsYet}
               </div>
             ) : (
               <div className="flex items-center gap-1.5 overflow-x-auto pb-1">
@@ -466,7 +466,7 @@ export const RouletteGameDrill: React.FC<RouletteGameDrillProps> = ({
           <div className="p-3 rounded-2xl bg-[#0C1524] border border-[#1C2C45] text-xs space-y-1.5">
             <div className="flex items-center gap-1.5 text-amber-400 font-arcade text-[11px] font-bold">
               <Lightbulb className="w-3.5 h-3.5 text-amber-400 shrink-0" />
-              <span>ADVANTAGE PLAY TELEMETRY</span>
+              <span>{t.advPlayTelemetry}</span>
             </div>
             <p className="text-[11px] text-slate-300 leading-relaxed">
               {variant === 'FRENCH' ? (
@@ -493,16 +493,16 @@ export const RouletteGameDrill: React.FC<RouletteGameDrillProps> = ({
           <div className="flex items-center gap-2">
             <span className="text-xs font-arcade font-bold text-emerald-300 flex items-center gap-1.5">
               <Flame className="w-4 h-4 text-amber-400" />
-              TABLE FELT BETTING SPOT
+              {t.tableFeltBettingSpot}
             </span>
             <span className="text-[10px] text-slate-400 font-mono-telemetry">
-              (Click any number or area to place chips)
+              {t.clickAnyNumberHelp}
             </span>
           </div>
 
           <div className="flex items-center gap-2">
             <span className="text-xs font-arcade text-amber-300 font-bold">
-              TOTAL WAGER: ${totalWager}
+              {t.totalWagerLabel}: ${totalWager}
             </span>
             {totalWager > 0 && (
               <CasinoChipStack amount={totalWager} size="xs" />
@@ -530,14 +530,14 @@ export const RouletteGameDrill: React.FC<RouletteGameDrillProps> = ({
               disabled={isSpinningWheel || bets.length === 0}
               className="px-3 py-1.5 rounded-xl bg-[#1A1215] hover:bg-[#2C1920] border border-rose-500/40 text-rose-300 font-arcade text-xs font-bold transition-all cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed"
             >
-              CLEAR FELT
+              {t.simClearBets}
             </button>
             <button
               onClick={handleDoubleBets}
               disabled={isSpinningWheel || bets.length === 0 || currentCredits < totalWager * 2}
               className="px-3 py-1.5 rounded-xl bg-[#14261C] hover:bg-[#1E3A2B] border border-emerald-500/40 text-emerald-300 font-arcade text-xs font-bold transition-all cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed"
             >
-              DOUBLE (2X)
+              {t.simDouble} (2X)
             </button>
             {lastBets.length > 0 && bets.length === 0 && (
               <button
@@ -545,7 +545,7 @@ export const RouletteGameDrill: React.FC<RouletteGameDrillProps> = ({
                 disabled={isSpinningWheel}
                 className="px-3 py-1.5 rounded-xl bg-[#162234] hover:bg-[#223552] border border-sky-500/40 text-sky-300 font-arcade text-xs font-bold transition-all cursor-pointer disabled:opacity-40"
               >
-                REBET
+                {t.simRebet}
               </button>
             )}
           </div>
@@ -565,10 +565,10 @@ export const RouletteGameDrill: React.FC<RouletteGameDrillProps> = ({
             <Play className={`w-4 h-4 ${isSpinningWheel ? 'animate-spin' : 'fill-slate-950'}`} />
             <span>
               {isSpinningWheel
-                ? 'SPINNING WHEEL...'
+                ? t.spinningWheel
                 : bets.length === 0
-                ? 'PLACE BETS TO SPIN'
-                : `SPIN WHEEL ($${totalWager})`}
+                ? t.placeBetsToSpin
+                : `${t.simSpinWheel} ($${totalWager})`}
             </span>
           </button>
         </div>
