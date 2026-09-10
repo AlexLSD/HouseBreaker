@@ -117,6 +117,7 @@ export const RiskLaboratory: React.FC<RiskLaboratoryProps> = ({ onOpenGuide }) =
   };
 
   // Analytical Risk of Ruin (RoR)
+  const [showKellyExplainer, setShowKellyExplainer] = useState<boolean>(true);
   const riskOfRuin = useMemo(() => {
     if (hourlyWinRate <= 0) return 100;
     const exponent = (-2 * hourlyWinRate * bankroll) / Math.pow(hourlyStdDev, 2);
@@ -126,7 +127,10 @@ export const RiskLaboratory: React.FC<RiskLaboratoryProps> = ({ onOpenGuide }) =
 
   const maxChartVal = useMemo(() => {
     const lastPoint = trajectoryPoints[trajectoryPoints.length - 1];
-    return Math.max(lastPoint.upper2Sigma * 1.1, bankroll * 2.5);
+    const upper = lastPoint?.upper2Sigma ? lastPoint.upper2Sigma * 1.1 : 0;
+    const b = Number(bankroll) || 1000;
+    const computed = Math.max(upper, b * 2.5, 100);
+    return isFinite(computed) && computed > 0 ? computed : 1000;
   }, [trajectoryPoints, bankroll]);
 
   return (
@@ -184,6 +188,102 @@ export const RiskLaboratory: React.FC<RiskLaboratoryProps> = ({ onOpenGuide }) =
             ))}
           </div>
         </div>
+      </div>
+
+      {/* ZERO TO HERO: THE KELLY SYSTEM EXPLAINED CLEARLY */}
+      <div className="p-4 sm:p-5 rounded-3xl bg-gradient-to-b from-[#0F1828] via-[#0C1322] to-[#080D18] border-2 border-amber-500/40 shadow-2xl space-y-4">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-3 border-b border-[#1E2D47]">
+          <div className="flex items-center gap-2.5">
+            <div className="w-9 h-9 rounded-xl bg-amber-400/20 border border-amber-400/40 text-amber-300 flex items-center justify-center font-arcade font-bold shrink-0">
+              f*
+            </div>
+            <div>
+              <div className="flex items-center gap-2">
+                <h3 className="text-xs sm:text-sm font-bold text-white font-arcade uppercase tracking-wider">
+                  The Kelly System: Zero to Hero Demystified
+                </h3>
+                <span className="text-[10px] px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 font-mono-telemetry font-bold border border-emerald-500/40">
+                  ESSENTIAL AP
+                </span>
+              </div>
+              <p className="text-[11px] text-slate-300 font-sans-arcade">
+                Why professionals never flat-bet or guess bet sizes: optimal compounding with zero risk of ruin.
+              </p>
+            </div>
+          </div>
+
+          <button
+            onClick={() => setShowKellyExplainer(s => !s)}
+            className="px-3 py-1.5 rounded-xl bg-[#142136] hover:bg-[#1E304E] border border-sky-500/40 text-sky-300 text-xs font-arcade font-bold cursor-pointer transition-all self-start sm:self-auto"
+          >
+            {showKellyExplainer ? 'Collapse Guide ▲' : 'Expand Explanation ▼'}
+          </button>
+        </div>
+
+        {showKellyExplainer && (
+          <div className="space-y-4 animate-fade-in text-xs">
+            {/* 1. The Core Mystery Solved */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+              <div className="p-3.5 rounded-2xl bg-[#0A1220] border border-sky-500/30 space-y-1.5">
+                <span className="text-sky-400 font-arcade font-bold text-xs flex items-center gap-1.5">
+                  <HelpCircle className="w-4 h-4 text-sky-400" />
+                  1. The Problem Kelly Solved
+                </span>
+                <p className="text-slate-300 text-[11px] leading-relaxed">
+                  If you have a <strong>2% mathematical edge</strong>, betting too small makes you virtually zero profit. But betting too much (like 10% per hand) means a standard 5-loss streak wipes out your bankroll! John Kelly Jr. proved the exact formula that maximizes long-term compound wealth without bankrupting you.
+                </p>
+              </div>
+
+              <div className="p-3.5 rounded-2xl bg-[#091B14] border border-emerald-500/30 space-y-1.5">
+                <span className="text-emerald-400 font-arcade font-bold text-xs flex items-center gap-1.5">
+                  <Percent className="w-4 h-4 text-emerald-400" />
+                  2. The Simple Rule of Thumb
+                </span>
+                <p className="text-slate-300 text-[11px] leading-relaxed">
+                  For even-money bets (like Blackjack), Full Kelly is ridiculously simple:
+                  <strong className="block text-emerald-300 font-mono-telemetry my-1 p-1 bg-black/40 rounded border border-emerald-500/30 text-center">
+                    Bet % of Bankroll = Player Advantage (Edge %)
+                  </strong>
+                  At True Count +3 with a <strong>1.5% edge</strong> on a <strong>${bankroll.toLocaleString()}</strong> bankroll, Full Kelly bet is 1.5% = <strong>${Math.round(bankroll * 0.015)}</strong>.
+                </p>
+              </div>
+
+              <div className="p-3.5 rounded-2xl bg-[#200E13] border border-rose-500/30 space-y-1.5">
+                <span className="text-rose-400 font-arcade font-bold text-xs flex items-center gap-1.5">
+                  <AlertTriangle className="w-4 h-4 text-rose-400" />
+                  3. The Deadly Overbetting Trap
+                </span>
+                <p className="text-slate-300 text-[11px] leading-relaxed">
+                  If you bet <strong>2x Kelly</strong>, your long-term compound growth rate drops to <strong>EXACTLY ZERO</strong>. If you bet <strong>more than 2x Kelly</strong>, your growth rate becomes <strong>NEGATIVE</strong>, guaranteeing bankruptcy over time even with a positive edge!
+                </p>
+              </div>
+            </div>
+
+            {/* 2. Why Pros Bet Half-Kelly (The Sweet Spot) */}
+            <div className="p-3.5 rounded-2xl bg-[#0B1424] border border-amber-400/40 flex flex-col md:flex-row items-center justify-between gap-3">
+              <div className="space-y-1">
+                <div className="flex items-center gap-2">
+                  <Zap className="w-4 h-4 text-amber-400" />
+                  <span className="font-arcade font-bold text-amber-300 uppercase tracking-wide">
+                    Why Pros Always Bet Half-Kelly (0.50φ)
+                  </span>
+                </div>
+                <p className="text-[11px] text-slate-300 leading-relaxed max-w-2xl">
+                  Full Kelly suffers massive 50% drawdowns and heart-stopping swings. <strong>Half Kelly</strong> captures <strong>75% of maximum growth</strong> while cutting bankroll variance by <strong>75%</strong>! It slashes your risk of ruin down to under 2%.
+                </p>
+              </div>
+
+              <div className="flex items-center gap-2 bg-[#060A12] p-2 rounded-xl border border-amber-400/30 text-center shrink-0">
+                <div>
+                  <span className="text-[10px] text-slate-400 block">CURRENT MODE</span>
+                  <span className="text-amber-400 font-arcade font-bold text-sm">
+                    {fractionalKelly === 0.25 ? 'Quarter Kelly (0.25φ)' : fractionalKelly === 0.5 ? 'Half Kelly (0.50φ) ★' : 'Full Kelly (1.0φ)'}
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Practical Table Preset Strip */}
@@ -414,7 +514,15 @@ export const RiskLaboratory: React.FC<RiskLaboratoryProps> = ({ onOpenGuide }) =
             </defs>
 
             {/* Baseline */}
-            <line x1="0" y1={60 - (bankroll / maxChartVal) * 55} x2="100" y2={60 - (bankroll / maxChartVal) * 55} stroke="#243552" strokeDasharray="2,2" strokeWidth="0.75" />
+            {(() => {
+              const safeMax = isFinite(maxChartVal) && maxChartVal > 0 ? maxChartVal : 1000;
+              const safeBankroll = Number(bankroll) || 0;
+              const rawY = 60 - (safeBankroll / safeMax) * 55;
+              const lineY = isFinite(rawY) ? rawY : 30;
+              return (
+                <line x1="0" y1={lineY} x2="100" y2={lineY} stroke="#243552" strokeDasharray="2,2" strokeWidth="0.75" />
+              );
+            })()}
 
             {/* 2-Sigma */}
             <polygon

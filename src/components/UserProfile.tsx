@@ -34,9 +34,10 @@ import {
 
 interface UserProfileProps {
   onNavigateTab: (tabId: string) => void;
+  onEditProfile?: () => void;
 }
 
-export const UserProfile: React.FC<UserProfileProps> = ({ onNavigateTab }) => {
+export const UserProfile: React.FC<UserProfileProps> = ({ onNavigateTab, onEditProfile }) => {
   const { t } = useLanguage();
   const [profile, setProfile] = useState<UserProfileData>(() => loadUserProfile());
   const [activeSubTab, setActiveSubTab] = useState<'overview' | 'history' | 'mistakes' | 'strengths' | 'financials'>('overview');
@@ -105,18 +106,19 @@ export const UserProfile: React.FC<UserProfileProps> = ({ onNavigateTab }) => {
 
   // Generate Bankroll Performance SVG Chart points
   const chartData = useMemo(() => {
+    const startAmount = Number(profile.initialBankroll) || 2500;
     const basePoint = {
       index: 0,
       roundNumber: 0,
       label: 'Start',
-      bankroll: profile.startingBankroll,
+      bankroll: startAmount,
       netChange: 0,
       date: 'Baseline',
       outcome: 'BASE',
       game: 'Initial Stack'
     };
 
-    if (profile.history.length === 0) {
+    if (!profile.history || profile.history.length === 0) {
       return [basePoint];
     }
 
@@ -126,15 +128,15 @@ export const UserProfile: React.FC<UserProfileProps> = ({ onNavigateTab }) => {
       index: i + 1,
       roundNumber: i + 1,
       label: `R${i + 1}`,
-      bankroll: h.runningBankroll,
-      netChange: h.netChange,
-      date: new Date(h.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' }),
-      outcome: h.outcome,
-      game: h.game
+      bankroll: Number(h.runningBankroll) || startAmount,
+      netChange: Number(h.netChange) || 0,
+      date: new Date(h.timestamp || Date.now()).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' }),
+      outcome: h.outcome || 'PUSH',
+      game: h.game || 'DRILL'
     }));
 
     return [basePoint, ...points];
-  }, [profile.history, profile.startingBankroll]);
+  }, [profile.history, profile.initialBankroll]);
 
   // SVG dimensions for Bankroll chart
   const svgWidth = 680;
@@ -145,43 +147,67 @@ export const UserProfile: React.FC<UserProfileProps> = ({ onNavigateTab }) => {
   const paddingBottom = 34;
 
   const chartCoordinates = useMemo(() => {
-    if (chartData.length === 0) {
-      return { path: '', area: '', points: [], minB: 2000, maxB: 3000, baselineY: 115, ticks: [] };
-    }
-    const bankrolls = chartData.map(d => d.bankroll);
-    const minVal = Math.min(...bankrolls, profile.startingBankroll - 100);
-    const maxVal = Math.max(...bankrolls, profile.startingBankroll + 100);
-    const margin = Math.max(50, Math.ceil((maxVal - minVal) * 0.1));
-    const minB = Math.floor((minVal - margin) / 50) * 50;
-    const maxB = Math.ceil((maxVal + margin) / 50) * 50;
-    const range = maxB - minB || 1;
-
+    const startAmount = Number(profile.initialBankroll) || 2500;
     const innerWidth = svgWidth - paddingLeft - paddingRight;
     const innerHeight = svgHeight - paddingTop - paddingBottom;
 
+    if (!chartData || chartData.length === 0) {
+      return {
+        path: '',
+        area: '',
+        points: [],
+        minB: 2000,
+        maxB: 3000,
+        baselineY: paddingTop + innerHeight / 2,
+        ticks: [
+          { val: 3000, y: paddingTop },
+          { val: 2500, y: paddingTop + innerHeight / 2 },
+          { val: 2000, y: paddingTop + innerHeight }
+        ]
+      };
+    }
+
+    const bankrolls = chartData.map(d => Number(d.bankroll) || startAmount);
+    const minVal = Math.min(...bankrolls, startAmount - 100);
+    const maxVal = Math.max(...bankrolls, startAmount + 100);
+    const safeMinVal = isFinite(minVal) ? minVal : startAmount - 100;
+    const safeMaxVal = isFinite(maxVal) ? maxVal : startAmount + 100;
+    const margin = Math.max(50, Math.ceil((safeMaxVal - safeMinVal) * 0.1));
+    const minB = Math.floor((safeMinVal - margin) / 50) * 50;
+    const maxB = Math.ceil((safeMaxVal + margin) / 50) * 50;
+    const range = (maxB - minB) > 0 ? (maxB - minB) : 1;
+
     const points = chartData.map((d, i) => {
-      const x = paddingLeft + (i / Math.max(1, chartData.length - 1)) * innerWidth;
-      const y = paddingTop + (1 - (d.bankroll - minB) / range) * innerHeight;
-      return { x, y, ...d };
+      const denom = Math.max(1, chartData.length - 1);
+      const rawX = paddingLeft + (i / denom) * innerWidth;
+      const bVal = Number(d.bankroll) || startAmount;
+      const rawY = paddingTop + (1 - (bVal - minB) / range) * innerHeight;
+      const x = isFinite(rawX) ? rawX : paddingLeft;
+      const y = isFinite(rawY) ? rawY : paddingTop + innerHeight / 2;
+      return { ...d, x, y };
     });
 
     const path = points.reduce((acc, p, i) => `${acc} ${i === 0 ? 'M' : 'L'} ${p.x.toFixed(1)} ${p.y.toFixed(1)}`, '');
     const lastPt = points[points.length - 1];
     const firstPt = points[0];
-    const area = points.length > 0
+    const area = points.length > 0 && lastPt && firstPt
       ? `${path} L ${lastPt.x.toFixed(1)} ${(paddingTop + innerHeight).toFixed(1)} L ${firstPt.x.toFixed(1)} ${(paddingTop + innerHeight).toFixed(1)} Z`
       : '';
 
-    const baselineY = paddingTop + (1 - (profile.startingBankroll - minB) / range) * innerHeight;
+    const rawBaselineY = paddingTop + (1 - (startAmount - minB) / range) * innerHeight;
+    const baselineY = isFinite(rawBaselineY) ? rawBaselineY : paddingTop + innerHeight / 2;
 
     const ticks = [
       { val: maxB, y: paddingTop },
       { val: Math.round((maxB + minB) / 2), y: paddingTop + innerHeight / 2 },
       { val: minB, y: paddingTop + innerHeight }
-    ];
+    ].map(t => ({
+      val: isFinite(t.val) ? t.val : 0,
+      y: isFinite(t.y) ? t.y : paddingTop + innerHeight / 2
+    }));
 
     return { path, area, points, minB, maxB, baselineY, ticks };
-  }, [chartData, profile.startingBankroll]);
+  }, [chartData, profile.initialBankroll]);
 
   // Badges Earned
   const badges = [
@@ -221,19 +247,27 @@ export const UserProfile: React.FC<UserProfileProps> = ({ onNavigateTab }) => {
       <div className="p-4 sm:p-5 rounded-3xl bg-gradient-to-r from-[#0C1524] via-[#0E1A2E] to-[#0A111E] border-2 border-[#1E2E48] shadow-2xl flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div className="flex items-center gap-3.5">
           <div className="w-13 h-13 sm:w-14 sm:h-14 rounded-2xl bg-gradient-to-br from-amber-400 to-amber-600 border border-amber-300 shadow-lg flex items-center justify-center text-slate-950 font-arcade font-bold text-xl shrink-0">
-            AP
+            {profile.nickname ? profile.nickname.trim().slice(0, 2).toUpperCase() : 'AP'}
           </div>
           <div>
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 flex-wrap">
               <h1 className="text-base sm:text-lg font-bold text-white font-arcade uppercase tracking-wider">
-                {t.profileTitle}
+                {profile.nickname ? profile.nickname : t.profileTitle}
               </h1>
               <span className="px-2 py-0.5 rounded-full bg-amber-400/20 text-amber-300 font-mono-telemetry text-[10px] font-bold border border-amber-400/40">
                 ACTIVE OPERATOR
               </span>
+              {onEditProfile && (
+                <button
+                  onClick={onEditProfile}
+                  className="px-2 py-0.5 rounded-lg bg-[#142136] hover:bg-[#1E304E] border border-sky-500/40 text-sky-300 font-arcade text-[10px] transition-all cursor-pointer shadow-sm active:scale-95"
+                >
+                  {t.editProfileBtn || 'Edit Profile'}
+                </button>
+              )}
             </div>
             <p className="text-xs text-slate-400 font-sans-arcade mt-0.5">
-              {t.profileSubtitle}
+              {profile.nickname ? `${t.profileSubtitle} • Callsign: ${profile.nickname}` : t.profileSubtitle}
             </p>
           </div>
         </div>
@@ -490,60 +524,72 @@ export const UserProfile: React.FC<UserProfileProps> = ({ onNavigateTab }) => {
                     </defs>
 
                     {/* Horizontal Y-Axis Gridlines & Value Labels */}
-                    {chartCoordinates.ticks.map((tick, idx) => (
-                      <g key={idx}>
-                        <line
-                          x1={paddingLeft}
-                          y1={tick.y}
-                          x2={svgWidth - paddingRight}
-                          y2={tick.y}
-                          stroke="#1A2A42"
-                          strokeDasharray="3 3"
-                          strokeWidth="1"
-                        />
-                        <text
-                          x={paddingLeft - 6}
-                          y={tick.y + 4}
-                          textAnchor="end"
-                          className="fill-slate-500 text-[10px] font-mono-telemetry"
-                        >
-                          ${tick.val}
-                        </text>
-                      </g>
-                    ))}
+                    {chartCoordinates.ticks.map((tick, idx) => {
+                      const safeY = isFinite(tick.y) ? tick.y : 0;
+                      return (
+                        <g key={idx}>
+                          <line
+                            x1={paddingLeft}
+                            y1={safeY}
+                            x2={svgWidth - paddingRight}
+                            y2={safeY}
+                            stroke="#1A2A42"
+                            strokeDasharray="3 3"
+                            strokeWidth="1"
+                          />
+                          <text
+                            x={paddingLeft - 6}
+                            y={safeY + 4}
+                            textAnchor="end"
+                            className="fill-slate-500 text-[10px] font-mono-telemetry"
+                          >
+                            ${tick.val}
+                          </text>
+                        </g>
+                      );
+                    })}
 
                     {/* Starting Baseline Indicator ($2,500) */}
-                    <line
-                      x1={paddingLeft}
-                      y1={chartCoordinates.baselineY}
-                      x2={svgWidth - paddingRight}
-                      y2={chartCoordinates.baselineY}
-                      stroke="#F59E0B"
-                      strokeDasharray="5 5"
-                      strokeWidth="1.5"
-                      opacity="0.65"
-                    />
-                    <text
-                      x={svgWidth - paddingRight - 4}
-                      y={chartCoordinates.baselineY - 5}
-                      textAnchor="end"
-                      className="fill-amber-400 text-[9px] font-mono-telemetry font-bold"
-                    >
-                      {t.baselineBankroll}
-                    </text>
+                    {(() => {
+                      const safeBaselineY = isFinite(chartCoordinates.baselineY) ? chartCoordinates.baselineY : 0;
+                      return (
+                        <>
+                          <line
+                            x1={paddingLeft}
+                            y1={safeBaselineY}
+                            x2={svgWidth - paddingRight}
+                            y2={safeBaselineY}
+                            stroke="#F59E0B"
+                            strokeDasharray="5 5"
+                            strokeWidth="1.5"
+                            opacity="0.65"
+                          />
+                          <text
+                            x={svgWidth - paddingRight - 4}
+                            y={safeBaselineY - 5}
+                            textAnchor="end"
+                            className="fill-amber-400 text-[9px] font-mono-telemetry font-bold"
+                          >
+                            {t.baselineBankroll}
+                          </text>
+                        </>
+                      );
+                    })()}
 
                     {/* Gradient Area Fill */}
-                    <path d={chartCoordinates.area} fill="url(#bankrollGrad)" />
+                    {chartCoordinates.area && <path d={chartCoordinates.area} fill="url(#bankrollGrad)" />}
 
                     {/* Performance Trajectory Line */}
-                    <path
-                      d={chartCoordinates.path}
-                      fill="none"
-                      stroke="#10B981"
-                      strokeWidth="2.5"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
+                    {chartCoordinates.path && (
+                      <path
+                        d={chartCoordinates.path}
+                        fill="none"
+                        stroke="#10B981"
+                        strokeWidth="2.5"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                    )}
 
                     {/* X-Axis Round Labels along the bottom */}
                     {chartCoordinates.points.map((pt, idx) => {
@@ -555,11 +601,12 @@ export const UserProfile: React.FC<UserProfileProps> = ({ onNavigateTab }) => {
                         idx % Math.ceil(chartCoordinates.points.length / 8) === 0;
 
                       if (!showLabel) return null;
+                      const safeX = isFinite(pt.x) ? pt.x : 0;
 
                       return (
                         <text
                           key={`xlabel-${idx}`}
-                          x={pt.x}
+                          x={safeX}
                           y={svgHeight - 10}
                           textAnchor="middle"
                           className="fill-slate-400 text-[9px] font-mono-telemetry"
@@ -572,19 +619,21 @@ export const UserProfile: React.FC<UserProfileProps> = ({ onNavigateTab }) => {
                     {/* Data Points with interactive hover/click and color coding */}
                     {chartCoordinates.points.map((pt, idx) => {
                       const isSelected = selectedPointIndex === idx;
+                      const safeX = isFinite(pt.x) ? pt.x : 0;
+                      const safeY = isFinite(pt.y) ? pt.y : 0;
                       return (
                         <g key={`pt-${idx}`}>
                           {isSelected && (
                             <circle
-                              cx={pt.x}
-                              cy={pt.y}
+                              cx={safeX}
+                              cy={safeY}
                               r="9"
                               className="fill-sky-400/20 stroke-sky-400 stroke-2 animate-pulse"
                             />
                           )}
                           <circle
-                            cx={pt.x}
-                            cy={pt.y}
+                            cx={safeX}
+                            cy={safeY}
                             r={isSelected ? '6' : '4.5'}
                             onMouseEnter={() => setSelectedPointIndex(idx)}
                             onClick={() => setSelectedPointIndex(idx)}

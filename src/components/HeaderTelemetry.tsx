@@ -3,6 +3,7 @@ import { Coins, Flame, Shield, User, Languages, Check } from 'lucide-react';
 import { useLanguage } from '../i18n/LanguageContext';
 import { Language } from '../i18n/translations';
 import { sounds } from '../utils/soundEffects';
+import { loadUserProfile } from '../utils/userProfileStorage';
 
 interface HeaderTelemetryProps {
   onOpenCompliance: () => void;
@@ -58,10 +59,10 @@ export const HeaderTelemetry: React.FC<HeaderTelemetryProps> = ({
               <span className="relative inline-flex rounded-full h-2 w-2 bg-[#F59E0B]"></span>
             </span>
             <span className="font-arcade font-bold tracking-wider text-amber-300 text-xs sm:text-sm drop-shadow truncate">
-              HOUSE<span className="text-white">BREAKER</span>
+              House<span className="text-white">Breaker</span>
             </span>
-            <span className="text-[9px] px-1 sm:px-1.5 py-0.5 rounded bg-[#F59E0B]/15 text-[#FBBF24] border border-[#F59E0B]/30 font-mono-telemetry font-bold">
-              {t.proBadge}
+            <span className="text-[10px] lowercase px-1.5 py-0.5 rounded bg-amber-400/15 text-amber-300 border border-amber-400/40 font-mono font-medium">
+              {t.alphaBadge || 'alpha'}
             </span>
           </div>
 
@@ -121,18 +122,21 @@ export const HeaderTelemetry: React.FC<HeaderTelemetryProps> = ({
             )}
           </div>
 
-          {/* Profile Button (Icon Only) */}
+          {/* Profile Button with Operator Nickname */}
           <button
             onClick={onOpenProfile}
-            className={`w-9 h-9 sm:w-10 sm:h-10 flex items-center justify-center rounded-xl border transition-all cursor-pointer active:scale-95 shadow-sm ${
+            className={`h-9 sm:h-10 px-2.5 flex items-center gap-1.5 rounded-xl border transition-all cursor-pointer active:scale-95 shadow-sm ${
               activeTab === 'profile'
                 ? 'bg-gradient-to-r from-amber-400 to-amber-500 text-slate-950 border-amber-300 shadow-amber-900/30 ring-1 ring-amber-300'
                 : 'bg-gradient-to-r from-[#141F32] to-[#0E1726] hover:from-[#1E2E48] hover:to-[#141F32] border-sky-500/50 text-sky-300 hover:text-white'
             }`}
             aria-label={t.profile}
-            title={`${t.profile} - Advantage Play Telemetry & Performance`}
+            title={`${t.profile} - ${loadUserProfile().nickname || 'Operator'} Advantage Play Telemetry`}
           >
             <User className="w-4 h-4 shrink-0" />
+            <span className="hidden sm:inline text-[11px] font-arcade font-bold max-w-[90px] truncate">
+              {loadUserProfile().nickname || t.profile}
+            </span>
           </button>
 
           {/* Legal Statute / Law Button (Icon Only) */}

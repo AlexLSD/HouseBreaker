@@ -471,6 +471,23 @@ class SoundEngine {
       osc.stop(crackleTime + 0.03);
     }
   }
+
+  // Aliases for card games
+  public playShuffle() {
+    this.playCardDeal();
+  }
+
+  public playCard() {
+    this.playCardDeal();
+  }
+
+  public playBust() {
+    this.playLoss();
+  }
+
+  public playPush() {
+    this.playChip();
+  }
 }
 
 export const sounds = new SoundEngine();

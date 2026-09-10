@@ -15,6 +15,7 @@ import { RouletteWheel } from '../roulette/RouletteWheel';
 import { RouletteTableFelt } from '../roulette/RouletteTableFelt';
 import { CasinoChipStack } from '../CasinoChipStack';
 import { sounds } from '../../utils/soundEffects';
+import { useLanguage } from '../../i18n/LanguageContext';
 import {
   AlertTriangle,
   Award,
@@ -57,12 +58,14 @@ export const RouletteGameDrill: React.FC<RouletteGameDrillProps> = ({
   onMistake,
   onCorrect
 }) => {
+  const { language } = useLanguage();
   const [variant, setVariant] = useState<RouletteVariant>('EUROPEAN');
   const [bets, setBets] = useState<RouletteBet[]>([]);
   const [lastBets, setLastBets] = useState<RouletteBet[]>([]);
   const [activeChip, setActiveChip] = useState<number>(25);
 
   // Wheel animation states
+  const [showZeroToHero, setShowZeroToHero] = useState<boolean>(false);
   const [isSpinningWheel, setIsSpinningWheel] = useState<boolean>(false);
   const [winningPocket, setWinningPocket] = useState<PocketInfo | null>(null);
   const [lastSpinResult, setLastSpinResult] = useState<SpinResult | null>(null);
@@ -251,6 +254,15 @@ export const RouletteGameDrill: React.FC<RouletteGameDrillProps> = ({
 
         {/* Variant Selector */}
         <div className="flex flex-wrap items-center gap-2">
+          <button
+            type="button"
+            onClick={() => setShowZeroToHero(s => !s)}
+            className="px-2.5 py-1.5 rounded-xl bg-[#111C2E] hover:bg-[#182842] border border-amber-400/30 text-amber-300 font-arcade text-[10px] flex items-center gap-1 cursor-pointer transition-colors"
+          >
+            <Sparkles className="w-3.5 h-3.5 text-amber-400" />
+            <span>Zero to Hero Guide</span>
+          </button>
+
           <div className="p-1.5 rounded-xl bg-[#08101A] border border-[#1A2638] flex items-center gap-1">
             {(['EUROPEAN', 'FRENCH', 'AMERICAN'] as RouletteVariant[]).map(v => (
               <button
@@ -281,6 +293,66 @@ export const RouletteGameDrill: React.FC<RouletteGameDrillProps> = ({
           </div>
         </div>
       </div>
+
+      {/* Zero to Hero Roulette Explanation Drawer */}
+      {showZeroToHero && (
+        <div className="p-3.5 rounded-2xl bg-[#09101C] border border-amber-400/40 text-xs space-y-2.5 animate-fade-in shadow-xl text-slate-200">
+          <div className="flex items-center justify-between border-b border-[#1E2E48] pb-1.5">
+            <span className="font-arcade font-bold text-amber-300 flex items-center gap-1.5 uppercase text-xs">
+              <Sparkles className="w-3.5 h-3.5 text-amber-400" />
+              {language === 'ru'
+                ? 'Рулетка и преимущество казино: От Новичка До Профессионала'
+                : language === 'he'
+                ? 'רולטה ויתרון הבית: מדריך מאפס למקצוען'
+                : 'Roulette & House Edge: Zero to Hero Demystified'}
+            </span>
+            <span className="text-[9px] px-1.5 py-0.5 rounded bg-rose-500/20 text-rose-300 font-mono-telemetry font-bold">
+              PHYSICS & EDGE PROTOCOL
+            </span>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 text-[11px] leading-relaxed">
+            <div className="p-2.5 rounded-xl bg-[#070D18] border border-[#1C2940] space-y-1">
+              <strong className="text-amber-300 font-arcade block">
+                {language === 'ru' ? '1. Почему казино побеждает (Зеленый 0)' : language === 'he' ? '1. למה הקזינו מרוויח (ה-0 הירוק)' : '1. Why the Casino Wins (The Green 0)'}
+              </strong>
+              <p className="text-slate-300">
+                {language === 'ru'
+                  ? 'В европейском колесе 37 ячеек (1-36 + 0). Выплата за число 35:1 при реальных шансах 36:1! Недостающая 1/37 часть и дает казино математический перевес в 2.70%.'
+                  : language === 'he'
+                  ? 'ברולטה אירופית 37 תאים (1-36 ועוד 0). תשלום על מספר הוא 35:1 כשהסיכוי האמיתי הוא 36:1! החלק החסר מייצר יתרון בית של 2.70%.'
+                  : 'A single-zero wheel has 37 pockets (1-36 + 0). Payout on a single number is 35:1. True odds are 36:1! The missing 1/37 is where the 2.70% house edge comes from.'}
+              </p>
+            </div>
+
+            <div className="p-2.5 rounded-xl bg-[#070D18] border border-[#1C2940] space-y-1">
+              <strong className="text-emerald-300 font-arcade block">
+                {language === 'ru' ? '2. Французское правило La Partage (1.35%)' : language === 'he' ? '2. חוק La Partage הצרפתי (1.35%)' : '2. French La Partage (1.35% Edge)'}
+              </strong>
+              <p className="text-slate-300">
+                {language === 'ru'
+                  ? 'Во французской рулетке при выпадении 0 возвращается 50% ставки на равные шансы (Красное/Черное, Чет/Нечет). Это снижает перевес казино вдвое — до 1.35%!'
+                  : language === 'he'
+                  ? 'ברולטה צרפתית, אם הכדור נוחת ב-0, מוחזר 50% מהימורי הסיכוי השווה (אדום/שחור, זוגי/אי-זוגי). זה חותך את יתרון הבית בחצי ל-1.35% בלבד!'
+                  : 'On French tables, when the ball lands on 0, you only forfeit 50% of even-money bets (Red/Black, Odd/Even, 1-18/19-36). This cuts the house edge in half to 1.35%!'}
+              </p>
+            </div>
+
+            <div className="p-2.5 rounded-xl bg-[#070D18] border border-[#1C2940] space-y-1">
+              <strong className="text-rose-300 font-arcade block">
+                {language === 'ru' ? '3. Ловушка "Ошибки игрока"' : language === 'he' ? '3. מלכודת כשל המהמר' : '3. The Gambler\'s Fallacy Trap'}
+              </strong>
+              <p className="text-slate-300">
+                {language === 'ru'
+                  ? '«Красное выпало 5 раз подряд, сейчас точно черное!» — ЛОЖЬ. У колеса нет памяти. Каждый спин абсолютно независим (18/37 = 48.65%).'
+                  : language === 'he'
+                  ? '"אדום יצא 5 פעמים ברצף, עכשיו חייב לצאת שחור!" - טעות חמורה. לגלגל אין זיכרון. לכל סיבוב הסתברות זהה (48.65%).'
+                  : '"Red hit 5 times in a row, Black must hit next!" FALSE. The wheel has no memory. Each spin has the exact same independent probability (18/37 = 48.65%).'}
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Wheel & History Section */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-3 items-center">

@@ -384,6 +384,12 @@ export const DrillArena: React.FC<DrillArenaProps> = ({ onOpenGuide, onNavigateT
           <div className="hidden sm:flex items-center gap-1 text-[10px] text-slate-400 font-arcade">
             <span className="text-slate-500">{t.switchLab}:</span>
             <button
+              onClick={() => onNavigateTab?.('blackjack')}
+              className="px-2 py-1 rounded-lg bg-[#111927] hover:bg-[#1C283E] text-slate-300 hover:text-amber-300 border border-slate-700/50 transition-all cursor-pointer"
+            >
+              🃏 {t.navBlackjack}
+            </button>
+            <button
               onClick={() => onNavigateTab?.('roulette')}
               className="px-2 py-1 rounded-lg bg-[#111927] hover:bg-[#1C283E] text-slate-300 hover:text-amber-300 border border-slate-700/50 transition-all cursor-pointer"
             >

@@ -74,7 +74,8 @@ export const RouletteMonteCarloLab: React.FC<RouletteMonteCarloLabProps> = ({ va
 
     // Baseline (starting balance line)
     const baselineNorm = (initialBankroll - minVal) / range;
-    const baseY = height - padding - baselineNorm * (height - 2 * padding);
+    const computedBaseY = height - padding - baselineNorm * (height - 2 * padding);
+    const safeBaseY = isFinite(computedBaseY) ? computedBaseY : height / 2;
 
     return (
       <div className="w-full overflow-hidden rounded-2xl bg-[#090F1A] border border-[#1E293B] p-3">
@@ -90,14 +91,14 @@ export const RouletteMonteCarloLab: React.FC<RouletteMonteCarloLabProps> = ({ va
           {/* Baseline Dash */}
           <line
             x1={padding}
-            y1={baseY}
+            y1={safeBaseY}
             x2={width - padding}
-            y2={baseY}
+            y2={safeBaseY}
             stroke="#64748b"
             strokeDasharray="4,4"
             strokeWidth="1"
           />
-          <text x={padding + 4} y={baseY - 4} fill="#94a3b8" fontSize="9" fontFamily="monospace">
+          <text x={padding + 4} y={safeBaseY - 4} fill="#94a3b8" fontSize="9" fontFamily="monospace">
             Start: ${initialBankroll}
           </text>
 
@@ -112,16 +113,22 @@ export const RouletteMonteCarloLab: React.FC<RouletteMonteCarloLabProps> = ({ va
           />
 
           {/* Bankruptcy Marker if happened */}
-          {simResult.bankruptcyIndex && (
-            <circle
-              cx={points[simResult.bankruptcyIndex - 1]?.split(',')[0]}
-              cy={points[simResult.bankruptcyIndex - 1]?.split(',')[1]}
-              r="5"
-              fill="#ef4444"
-              stroke="#ffffff"
-              strokeWidth="1.5"
-            />
-          )}
+          {simResult.bankruptcyIndex && points[simResult.bankruptcyIndex - 1] && (() => {
+            const parts = points[simResult.bankruptcyIndex - 1].split(',');
+            const cx = parseFloat(parts[0]);
+            const cy = parseFloat(parts[1]);
+            if (!isFinite(cx) || !isFinite(cy)) return null;
+            return (
+              <circle
+                cx={cx}
+                cy={cy}
+                r="5"
+                fill="#ef4444"
+                stroke="#ffffff"
+                strokeWidth="1.5"
+              />
+            );
+          })()}
         </svg>
       </div>
     );

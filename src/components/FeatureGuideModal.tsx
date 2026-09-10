@@ -35,7 +35,7 @@ interface FeatureGuideModalProps {
 interface FeatureItem {
   id: string;
   tabId: string;
-  category: 'roulette' | 'slots' | 'poker' | 'bankroll' | 'drills' | 'general';
+  category: 'blackjack' | 'roulette' | 'slots' | 'poker' | 'bankroll' | 'drills' | 'general';
   title: string;
   tagline: string;
   edgeRating: string;
@@ -54,6 +54,34 @@ interface FeatureItem {
 }
 
 const UNIQUE_FEATURES: FeatureItem[] = [
+  {
+    id: 'f-blackjack',
+    tabId: 'blackjack',
+    category: 'blackjack',
+    title: 'Blackjack Strategy Matrix & Hi-Lo Counting Lab',
+    tagline: 'Interactive felt table, shoe penetration telemetry, Hi-Lo running/true count HUD, and Illustrious 18 deviation engine.',
+    edgeRating: '+1.5% to +2.5% Player Edge',
+    edgeType: 'positive',
+    icon: Shield,
+    accentColor: 'text-amber-400 border-amber-500/40 bg-amber-500/10',
+    badgeText: 'CARD COUNTING LAB',
+    whatItDoes:
+      'Simulates genuine casino blackjack with a 6-deck shoe, cutting card penetration, and mathematical strategy tracking. Features an interactive Basic Strategy decision matrix, real-time Hi-Lo card counting telemetry (Running Count and True Count), and instant Illustrious 18 deviation alerts.',
+    howToUse: [
+      'Place bets and deal cards onto the green felt table.',
+      'Choose Hit, Stand, Double Down, or Split based on Basic Strategy.',
+      'Track the running count (+1 for 2-6, 0 for 7-9, -1 for 10-A) and divide by remaining decks for the True Count.',
+      'Open the Basic Strategy Matrix tab to memorize optimal moves against all dealer upcards.'
+    ],
+    mathPrinciple: {
+      formulaName: 'Hi-Lo Card Counting & True Count Formula',
+      formula: 'True Count (TC) = Running Count (RC) ÷ Decks Remaining',
+      explanation:
+        'When low cards leave the shoe, the remaining deck is dense with 10s and Aces. This increases player Blackjacks (paid 3:2), strengthens Double Downs, and increases dealer bust frequency. When TC ≥ +2, the player holds an authentic statistical advantage.'
+    },
+    proTip:
+      'Always use the 1-to-8 or 1-to-12 bet spread based on True Count. When TC is negative or neutral, keep bets at 1 unit ($10). When TC hits +3 or higher, scale up aggressively to 6-10 units.'
+  },
   {
     id: 'f-roulette',
     tabId: 'roulette',
@@ -301,7 +329,8 @@ export const FeatureGuideModal: React.FC<FeatureGuideModalProps> = ({
   });
 
   const categories = [
-    { id: 'all', label: 'All Modules (7)' },
+    { id: 'all', label: 'All Modules (8)' },
+    { id: 'blackjack', label: 'Blackjack & Counting' },
     { id: 'roulette', label: 'Roulette Suite & Systems' },
     { id: 'slots', label: 'Slot Break-Even' },
     { id: 'poker', label: 'Poker Odds & GTO' },

@@ -7,6 +7,7 @@ import React, { useState } from 'react';
 import { HeaderTelemetry } from './components/HeaderTelemetry';
 import { CommandCenter } from './components/CommandCenter';
 import { RouletteLab } from './components/RouletteLab';
+import { BlackjackLab } from './components/BlackjackLab';
 import { RangeMonteCarloLab } from './components/RangeMonteCarloLab';
 import { MassiveGridSlots } from './components/MassiveGridSlots';
 import { RiskLaboratory } from './components/RiskLaboratory';
@@ -15,17 +16,29 @@ import { UserProfile } from './components/UserProfile';
 import { BottomNavigation } from './components/BottomNavigation';
 import { ComplianceModal } from './components/ComplianceModal';
 import { FeatureGuideModal } from './components/FeatureGuideModal';
+import { OnboardingModal } from './components/OnboardingModal';
 import { LanguageProvider } from './i18n/LanguageContext';
+import { loadUserProfile } from './utils/userProfileStorage';
 
 export default function App() {
   const [activeTab, setActiveTab] = useState<string>('command-center');
   const [isComplianceOpen, setIsComplianceOpen] = useState<boolean>(false);
   const [isFeaturesOpen, setIsFeaturesOpen] = useState<boolean>(false);
   const [featureCategory, setFeatureCategory] = useState<string>('all');
+  const [isOnboardingOpen, setIsOnboardingOpen] = useState<boolean>(() => {
+    const p = loadUserProfile();
+    return !p.onboardingCompleted;
+  });
+  const [userProfileData, setUserProfileData] = useState(() => loadUserProfile());
 
   const openGuide = (category = 'all') => {
     setFeatureCategory(category);
     setIsFeaturesOpen(true);
+  };
+
+  const handleOnboardingComplete = () => {
+    setUserProfileData(loadUserProfile());
+    setIsOnboardingOpen(false);
   };
 
   return (
@@ -48,6 +61,8 @@ export default function App() {
             />
           )}
 
+          {activeTab === 'blackjack' && <BlackjackLab onOpenGuide={() => openGuide('blackjack')} />}
+
           {activeTab === 'roulette' && <RouletteLab onOpenGuide={() => openGuide('roulette')} />}
 
           {activeTab === 'range-lab' && <RangeMonteCarloLab onOpenGuide={() => openGuide('poker')} />}
@@ -65,7 +80,9 @@ export default function App() {
 
           {activeTab === 'profile' && (
             <UserProfile
+              key={userProfileData.nickname + userProfileData.preferredLanguage}
               onNavigateTab={setActiveTab}
+              onEditProfile={() => setIsOnboardingOpen(true)}
             />
           )}
         </main>
@@ -74,6 +91,13 @@ export default function App() {
         <BottomNavigation
           activeTab={activeTab}
           onSelectTab={setActiveTab}
+        />
+
+        {/* Tactical Onboarding Modal for Nickname and Language Setup */}
+        <OnboardingModal
+          isOpen={isOnboardingOpen}
+          initialNickname={userProfileData.nickname}
+          onComplete={handleOnboardingComplete}
         />
 
         {/* Comprehensive Feature & Advantage Guide Modal */}

@@ -6,10 +6,13 @@ import {
 } from '../../utils/mathEngine';
 import { sounds } from '../../utils/soundEffects';
 import { CasinoChipStack } from '../CasinoChipStack';
+import { PlayingCard } from '../PlayingCard';
 import { useLanguage } from '../../i18n/LanguageContext';
 import {
   AlertCircle,
+  BookOpen,
   CheckCircle2,
+  ChevronDown,
   ChevronRight,
   Flag,
   Sparkles,
@@ -188,7 +191,7 @@ export const BlackjackGameDrill: React.FC<BlackjackGameDrillProps> = ({
   onRecordMistake,
   onRecordEarning
 }) => {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   const [activeCategory, setActiveCategory] = useState<string>('ALL');
   const [currentScenarioIdx, setCurrentScenarioIdx] = useState<number>(0);
 
@@ -209,6 +212,7 @@ export const BlackjackGameDrill: React.FC<BlackjackGameDrillProps> = ({
 
   // User decision state
   const [userAction, setUserAction] = useState<string | null>(null);
+  const [showHiLoExplainer, setShowHiLoExplainer] = useState<boolean>(false);
   const [handOutcomeText, setHandOutcomeText] = useState<string | null>(null);
   const [evaluation, setEvaluation] = useState<{
     isCorrect: boolean;
@@ -285,11 +289,21 @@ export const BlackjackGameDrill: React.FC<BlackjackGameDrillProps> = ({
 
   const handleDealCards = () => {
     if (cardsDealt) return;
-    if (credits < activeHandBet) {
+    let betToPlace = activeHandBet;
+    if (credits < betToPlace) {
+      if (credits > 0) {
+        betToPlace = credits;
+        setActiveHandBet(credits);
+      } else {
+        sounds.playLoss();
+        return;
+      }
+    }
+    if (betToPlace <= 0) {
       sounds.playLoss();
       return;
     }
-    const placed = onBet(activeHandBet);
+    const placed = onBet(betToPlace);
     if (!placed) return;
 
     sounds.playChip();
@@ -410,20 +424,8 @@ export const BlackjackGameDrill: React.FC<BlackjackGameDrillProps> = ({
   };
 
   const handleAction = (action: 'HIT' | 'STAND' | 'DOUBLE' | 'SPLIT' | 'SURRENDER') => {
-    if (userAction) return;
-
-    // Auto-deal if the user jumped straight to an action
-    if (!cardsDealt) {
-      if (credits >= activeHandBet) {
-        onBet(activeHandBet);
-      }
-      sounds.playCardDeal();
-      setCardsDealt(true);
-      setIsSplitMode(false);
-      setSplitHands(null);
-      setHandOutcomeText(null);
-      setEvaluation(null);
-    }
+    // Only allow player actions AFTER betting and dealing cards
+    if (!cardsDealt || userAction) return;
 
     // If player selected Split on an unequal hand, explain pedagogical rule
     if (action === 'SPLIT' && !isPairHand) {
@@ -582,13 +584,76 @@ export const BlackjackGameDrill: React.FC<BlackjackGameDrillProps> = ({
           ))}
         </div>
 
-        {/* Count Index Telemetry */}
-        <div className="flex items-center gap-2 px-2.5 py-1 rounded-lg bg-black/40 border border-[#1E2B40] text-slate-300 font-mono-telemetry text-[11px]">
-          <span>TC: <strong className="text-amber-300">{activeScenario.trueCount > 0 ? `+${activeScenario.trueCount}` : activeScenario.trueCount}</strong></span>
-          <span className="text-slate-600">|</span>
-          <span>RC: <strong className="text-emerald-300">{activeScenario.runningCount > 0 ? `+${activeScenario.runningCount}` : activeScenario.runningCount}</strong></span>
+        {/* Count Index Telemetry & Hi-Lo Explainer Button */}
+        <div className="flex items-center gap-2">
+          <button
+            type="button"
+            onClick={() => setShowHiLoExplainer(prev => !prev)}
+            className="flex items-center gap-1 px-2.5 py-1 rounded-lg bg-[#111C2E] hover:bg-[#182842] border border-amber-400/30 text-amber-300 font-arcade text-[10px] cursor-pointer transition-colors"
+          >
+            <BookOpen className="w-3 h-3 text-amber-400" />
+            <span>Hi-Lo Explanation</span>
+            <ChevronDown className={`w-3 h-3 transition-transform ${showHiLoExplainer ? 'rotate-180' : ''}`} />
+          </button>
+
+          <div className="flex items-center gap-2 px-2.5 py-1 rounded-lg bg-black/40 border border-[#1E2B40] text-slate-300 font-mono-telemetry text-[11px]">
+            <span>TC: <strong className="text-amber-300">{activeScenario.trueCount > 0 ? `+${activeScenario.trueCount}` : activeScenario.trueCount}</strong></span>
+            <span className="text-slate-600">|</span>
+            <span>RC: <strong className="text-emerald-300">{activeScenario.runningCount > 0 ? `+${activeScenario.runningCount}` : activeScenario.runningCount}</strong></span>
+          </div>
         </div>
       </div>
+
+      {/* Hi-Lo Card System Explanation Drawer */}
+      {showHiLoExplainer && (
+        <div className="p-3.5 rounded-2xl bg-[#081220] border border-amber-400/40 text-xs space-y-2.5 animate-fade-in shadow-xl text-slate-200">
+          <div className="flex items-center justify-between border-b border-[#1E2E48] pb-1.5">
+            <span className="font-arcade font-bold text-amber-300 flex items-center gap-1.5 uppercase text-xs">
+              <Sparkles className="w-3.5 h-3.5 text-amber-400" />
+              The Hi-Lo Card Counting System Explained
+            </span>
+            <span className="text-[9px] px-1.5 py-0.5 rounded bg-emerald-500/20 text-emerald-300 font-mono-telemetry font-bold">
+              HARVEY DUBحER & EDWARD THORP
+            </span>
+          </div>
+
+          <p className="text-slate-300 leading-relaxed font-sans-arcade text-xs">
+            The Hi-Lo system tracks the ratio of high cards (tens, picture cards, aces) to low cards remaining in the deck. When low cards leave the shoe, the remaining deck is rich in 10s and Aces, shifting mathematical advantage to the player!
+          </p>
+
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 text-[11px]">
+            <div className="p-2.5 rounded-xl bg-emerald-950/40 border border-emerald-500/30 space-y-1">
+              <div className="flex items-center justify-between">
+                <span className="font-arcade font-bold text-emerald-400">LOW CARDS: 2, 3, 4, 5, 6</span>
+                <span className="px-1.5 py-0.5 rounded bg-emerald-500/30 text-emerald-300 font-mono-telemetry font-bold">+1</span>
+              </div>
+              <p className="text-slate-300 text-[10px] leading-tight">
+                When dealt, these cards leave the shoe. Fewer low cards mean fewer dealer-saving cards and higher dealer bust rates.
+              </p>
+            </div>
+
+            <div className="p-2.5 rounded-xl bg-slate-900/60 border border-slate-700/50 space-y-1">
+              <div className="flex items-center justify-between">
+                <span className="font-arcade font-bold text-slate-300">NEUTRAL: 7, 8, 9</span>
+                <span className="px-1.5 py-0.5 rounded bg-slate-700 text-slate-300 font-mono-telemetry font-bold">0</span>
+              </div>
+              <p className="text-slate-300 text-[10px] leading-tight">
+                Neutral cards have negligible statistical impact on the player advantage and are counted as zero.
+              </p>
+            </div>
+
+            <div className="p-2.5 rounded-xl bg-rose-950/40 border border-rose-500/30 space-y-1">
+              <div className="flex items-center justify-between">
+                <span className="font-arcade font-bold text-rose-400">HIGH: 10, J, Q, K, A</span>
+                <span className="px-1.5 py-0.5 rounded bg-rose-500/30 text-rose-300 font-mono-telemetry font-bold">-1</span>
+              </div>
+              <p className="text-slate-300 text-[10px] leading-tight">
+                High cards fuel natural 3:2 Blackjacks and double-down wins. When they leave, the advantage drops by 1.
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Main Blackjack Felt Table */}
       <div className="p-4 sm:p-5 rounded-3xl bg-gradient-to-b from-[#051F14] via-[#04170E] to-[#020D08] border-2 border-emerald-600/40 shadow-2xl relative">
@@ -603,46 +668,35 @@ export const BlackjackGameDrill: React.FC<BlackjackGameDrillProps> = ({
         <div className="flex flex-col items-center pb-3 border-b border-[#1A3828]">
           <span className="text-[11px] text-amber-200/90 font-arcade uppercase tracking-widest mb-1.5 flex items-center gap-1.5">
             <Shield className="w-3.5 h-3.5 text-amber-400" />
-            {t.dealerHand} {dealerRevealed && `(${dealerVal.total})`}
+            {t.dealerHand} {cardsDealt && (dealerRevealed ? `(${dealerVal.total})` : `(${computeBlackjackHandValue([dealerUpcard]).total})`)}
           </span>
 
           <div className="flex items-center gap-2.5">
-            {/* Dealer Upcard */}
-            <div className="w-14 h-20 sm:w-16 sm:h-24 rounded-xl bg-white border-2 border-amber-300 flex flex-col justify-between p-2 font-bold font-mono shadow-xl">
-              <div className={`text-xs sm:text-sm leading-none ${dealerUpcard.suit === 'h' || dealerUpcard.suit === 'd' ? 'text-red-600' : 'text-slate-950'}`}>
-                {dealerUpcard.rank}
-              </div>
-              <div className={`text-lg sm:text-2xl self-center leading-none ${dealerUpcard.suit === 'h' || dealerUpcard.suit === 'd' ? 'text-red-600' : 'text-slate-950'}`}>
-                {dealerUpcard.suit === 'h' ? '♥' : dealerUpcard.suit === 'd' ? '♦' : dealerUpcard.suit === 'c' ? '♣' : '♠'}
-              </div>
-              <div className={`text-xs sm:text-sm leading-none self-end rotate-180 ${dealerUpcard.suit === 'h' || dealerUpcard.suit === 'd' ? 'text-red-600' : 'text-slate-950'}`}>
-                {dealerUpcard.rank}
-              </div>
-            </div>
-
-            {/* Dealer Hole Card */}
-            {!dealerRevealed ? (
-              <div className="w-14 h-20 sm:w-16 sm:h-24 rounded-xl border-2 border-[#2A523A] bg-gradient-to-br from-[#0F2D1F] to-[#071911] shadow-xl flex flex-col items-center justify-center text-xl text-amber-400/80 font-arcade select-none">
-                🂠
-                <span className="text-[8px] text-emerald-400/70 font-mono-telemetry mt-1">HOLE</span>
-              </div>
-            ) : (
-              dealerFullHand.slice(1).map((card, idx) => (
-                <div
-                  key={idx}
-                  className="w-14 h-20 sm:w-16 sm:h-24 rounded-xl bg-white border-2 border-amber-300 flex flex-col justify-between p-2 font-bold font-mono shadow-xl animate-deal-card"
-                >
-                  <div className={`text-xs sm:text-sm leading-none ${card.suit === 'h' || card.suit === 'd' ? 'text-red-600' : 'text-slate-950'}`}>
-                    {card.rank}
-                  </div>
-                  <div className={`text-lg sm:text-2xl self-center leading-none ${card.suit === 'h' || card.suit === 'd' ? 'text-red-600' : 'text-slate-950'}`}>
-                    {card.suit === 'h' ? '♥' : card.suit === 'd' ? '♦' : card.suit === 'c' ? '♣' : '♠'}
-                  </div>
-                  <div className={`text-xs sm:text-sm leading-none self-end rotate-180 ${card.suit === 'h' || card.suit === 'd' ? 'text-red-600' : 'text-slate-950'}`}>
-                    {card.rank}
-                  </div>
+            {!cardsDealt ? (
+              <>
+                <div className="w-14 h-20 sm:w-16 sm:h-24 rounded-xl border-2 border-dashed border-emerald-500/40 bg-emerald-950/20 shadow-inner flex flex-col items-center justify-center text-xs text-emerald-400 font-arcade select-none">
+                  🂠
+                  <span className="text-[8px] text-emerald-300/60 font-mono-telemetry mt-1">UPCARD</span>
                 </div>
-              ))
+                <div className="w-14 h-20 sm:w-16 sm:h-24 rounded-xl border-2 border-dashed border-emerald-500/40 bg-emerald-950/20 shadow-inner flex flex-col items-center justify-center text-xs text-emerald-400 font-arcade select-none">
+                  🂠
+                  <span className="text-[8px] text-emerald-300/60 font-mono-telemetry mt-1">HOLE</span>
+                </div>
+              </>
+            ) : (
+              <>
+                {/* Dealer Upcard with Royal Figures */}
+                <PlayingCard card={dealerUpcard} size="md" className="animate-deal-card" />
+
+                {/* Dealer Hole Card */}
+                {!dealerRevealed ? (
+                  <PlayingCard isFaceDown={true} size="md" className="animate-deal-card" />
+                ) : (
+                  dealerFullHand.slice(1).map((card, idx) => (
+                    <PlayingCard key={idx} card={card} size="md" className="animate-deal-card" />
+                  ))
+                )}
+              </>
             )}
           </div>
         </div>
@@ -685,10 +739,11 @@ export const BlackjackGameDrill: React.FC<BlackjackGameDrillProps> = ({
               {!cardsDealt && (
                 <button
                   onClick={handleDealCards}
-                  className="mt-2.5 px-4 py-1.5 rounded-xl bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-300 hover:to-amber-400 text-slate-950 font-arcade font-bold text-xs tracking-wider shadow-lg flex items-center gap-1.5 active:scale-95 cursor-pointer animate-pulse"
+                  disabled={credits <= 0 || activeHandBet <= 0}
+                  className="mt-2.5 px-5 py-2 rounded-xl bg-gradient-to-r from-amber-400 via-amber-300 to-amber-500 hover:from-amber-300 hover:to-amber-400 text-slate-950 font-arcade font-bold text-xs sm:text-sm tracking-wider shadow-lg shadow-amber-500/25 flex items-center gap-2 active:scale-95 cursor-pointer animate-pulse transition-all border border-amber-300"
                 >
-                  <Sparkles className="w-3.5 h-3.5" />
-                  {t.dealCards} (${activeHandBet})
+                  <Sparkles className="w-4 h-4 text-slate-950" />
+                  {t.dealCards} (${Math.min(activeHandBet, credits > 0 ? credits : activeHandBet)})
                 </button>
               )}
             </div>
@@ -778,25 +833,14 @@ export const BlackjackGameDrill: React.FC<BlackjackGameDrillProps> = ({
                     </div>
                   </>
                 ) : (
-                  playerHand.map((card, idx) => {
-                    const isRed = card.suit === 'h' || card.suit === 'd';
-                    return (
-                      <div
-                        key={idx}
-                        className="w-14 h-20 sm:w-16 sm:h-24 rounded-xl bg-white border-2 border-amber-300 flex flex-col justify-between p-2 font-bold font-mono shadow-xl animate-deal-card"
-                      >
-                        <div className={`text-xs sm:text-sm leading-none ${isRed ? 'text-red-600' : 'text-slate-950'}`}>
-                          {card.rank}
-                        </div>
-                        <div className={`text-lg sm:text-2xl self-center leading-none ${isRed ? 'text-red-600' : 'text-slate-950'}`}>
-                          {card.suit === 'h' ? '♥' : card.suit === 'd' ? '♦' : card.suit === 'c' ? '♣' : '♠'}
-                        </div>
-                        <div className={`text-xs sm:text-sm leading-none self-end rotate-180 ${isRed ? 'text-red-600' : 'text-slate-950'}`}>
-                          {card.rank}
-                        </div>
-                      </div>
-                    );
-                  })
+                  playerHand.map((card, idx) => (
+                    <PlayingCard
+                      key={idx}
+                      card={card}
+                      size="md"
+                      className="animate-deal-card"
+                    />
+                  ))
                 )}
               </div>
             </>
@@ -815,21 +859,14 @@ export const BlackjackGameDrill: React.FC<BlackjackGameDrillProps> = ({
                     {t.splitHand1} ({computeBlackjackHandValue(splitHands!.hand1).total})
                   </span>
                   <div className="flex items-center gap-1.5">
-                    {splitHands!.hand1.map((card, idx) => {
-                      const isRed = card.suit === 'h' || card.suit === 'd';
-                      return (
-                        <div
-                          key={idx}
-                          className="w-12 h-18 sm:w-14 sm:h-20 rounded-xl bg-white border-2 border-purple-300 flex flex-col justify-between p-1.5 font-bold font-mono shadow-md animate-deal-card"
-                        >
-                          <div className={`text-xs leading-none ${isRed ? 'text-red-600' : 'text-slate-950'}`}>{card.rank}</div>
-                          <div className={`text-base self-center leading-none ${isRed ? 'text-red-600' : 'text-slate-950'}`}>
-                            {card.suit === 'h' ? '♥' : card.suit === 'd' ? '♦' : card.suit === 'c' ? '♣' : '♠'}
-                          </div>
-                          <div className={`text-xs leading-none self-end rotate-180 ${isRed ? 'text-red-600' : 'text-slate-950'}`}>{card.rank}</div>
-                        </div>
-                      );
-                    })}
+                    {splitHands!.hand1.map((card, idx) => (
+                      <PlayingCard
+                        key={idx}
+                        card={card}
+                        size="sm"
+                        className="animate-deal-card"
+                      />
+                    ))}
                   </div>
                 </div>
 
@@ -839,21 +876,14 @@ export const BlackjackGameDrill: React.FC<BlackjackGameDrillProps> = ({
                     {t.splitHand2} ({computeBlackjackHandValue(splitHands!.hand2).total})
                   </span>
                   <div className="flex items-center gap-1.5">
-                    {splitHands!.hand2.map((card, idx) => {
-                      const isRed = card.suit === 'h' || card.suit === 'd';
-                      return (
-                        <div
-                          key={idx}
-                          className="w-12 h-18 sm:w-14 sm:h-20 rounded-xl bg-white border-2 border-purple-300 flex flex-col justify-between p-1.5 font-bold font-mono shadow-md animate-deal-card"
-                        >
-                          <div className={`text-xs leading-none ${isRed ? 'text-red-600' : 'text-slate-950'}`}>{card.rank}</div>
-                          <div className={`text-base self-center leading-none ${isRed ? 'text-red-600' : 'text-slate-950'}`}>
-                            {card.suit === 'h' ? '♥' : card.suit === 'd' ? '♦' : card.suit === 'c' ? '♣' : '♠'}
-                          </div>
-                          <div className={`text-xs leading-none self-end rotate-180 ${isRed ? 'text-red-600' : 'text-slate-950'}`}>{card.rank}</div>
-                        </div>
-                      );
-                    })}
+                    {splitHands!.hand2.map((card, idx) => (
+                      <PlayingCard
+                        key={idx}
+                        card={card}
+                        size="sm"
+                        className="animate-deal-card"
+                      />
+                    ))}
                   </div>
                 </div>
               </div>
@@ -863,85 +893,130 @@ export const BlackjackGameDrill: React.FC<BlackjackGameDrillProps> = ({
 
         {/* Live Action Buttons - Spacious, ergonomic, responsive with icons and safe text */}
         <div className="pt-3 border-t border-[#254231]">
+          {/* Status banner */}
+          {!cardsDealt ? (
+            <div className="mb-2.5 px-3 py-1.5 rounded-xl bg-[#07130c] border border-amber-400/40 flex items-center justify-between text-xs text-amber-200 animate-fade-in">
+              <div className="flex items-center gap-2">
+                <Sparkles className="w-3.5 h-3.5 text-amber-400 shrink-0 animate-pulse" />
+                <span className="font-arcade text-[11px]">
+                  {language === 'ru'
+                    ? 'Поставьте фишки и нажмите «РАЗДАТЬ КАРТЫ» для начала раунда'
+                    : language === 'he'
+                    ? 'הנח את ההימור שלך ולחץ על «חלק קלפים» כדי להתחיל'
+                    : 'Place your wager and click "DEAL CARDS" to begin'}
+                </span>
+              </div>
+              <span className="text-[10px] font-mono-telemetry font-bold px-2 py-0.5 rounded bg-amber-400/20 text-amber-300 border border-amber-400/30">
+                {t.wager}: {activeHandBet} CR
+              </span>
+            </div>
+          ) : !userAction && (
+            <div className="mb-2.5 px-3 py-1.5 rounded-xl bg-emerald-950/60 border border-emerald-500/40 flex items-center justify-between text-xs text-emerald-200 animate-fade-in">
+              <div className="flex items-center gap-2">
+                <Zap className="w-3.5 h-3.5 text-emerald-400 shrink-0 animate-pulse" />
+                <span className="font-arcade text-[11px]">
+                  {language === 'ru'
+                    ? 'Карты розданы! Выберите оптимальное действие по стратегии (+EV):'
+                    : language === 'he'
+                    ? 'הקלפים חולקו! בחר בפעולה האופטימלית לפי אסטרטגיה (+EV):'
+                    : 'Cards dealt! Select your optimal strategy decision (+EV):'}
+                </span>
+              </div>
+              <span className="text-[10px] font-mono-telemetry font-bold px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
+                {activeScenario.targetCategory.replace('_', ' ')}
+              </span>
+            </div>
+          )}
+
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2 sm:gap-3">
             {/* HIT */}
             <button
               onClick={() => handleAction('HIT')}
-              disabled={!!userAction}
-              className={`min-h-[50px] sm:min-h-[54px] px-3 py-2.5 rounded-2xl font-arcade font-bold text-xs sm:text-sm tracking-wide transition-all cursor-pointer shadow-md flex items-center justify-center gap-1.5 ${
+              disabled={!cardsDealt || !!userAction}
+              className={`min-h-[50px] sm:min-h-[54px] px-3 py-2.5 rounded-2xl font-arcade font-bold text-xs sm:text-sm tracking-wide transition-all shadow-md flex items-center justify-center gap-1.5 ${
                 userAction === 'HIT'
-                  ? 'bg-amber-400 text-slate-950 ring-2 ring-white scale-105'
+                  ? 'bg-amber-400 text-slate-950 ring-2 ring-white scale-105 shadow-amber-500/40 shadow-lg'
+                  : !cardsDealt
+                  ? 'bg-[#0B1711] text-slate-500 border border-emerald-950/80 cursor-not-allowed opacity-40 select-none'
                   : userAction
                   ? 'bg-[#101F18] text-slate-600 border border-slate-700/40 cursor-not-allowed opacity-50'
-                  : 'bg-gradient-to-r from-emerald-600 to-teal-700 hover:from-emerald-500 hover:to-teal-600 text-white active:scale-95'
+                  : 'bg-gradient-to-r from-emerald-600 to-teal-700 hover:from-emerald-500 hover:to-teal-600 text-white active:scale-95 cursor-pointer'
               }`}
             >
-              <Zap className="w-4 h-4 shrink-0 text-amber-300" />
+              <Zap className={`w-4 h-4 shrink-0 ${cardsDealt && !userAction ? 'text-amber-300' : 'text-slate-500'}`} />
               <span className="whitespace-nowrap">{t.hit}</span>
             </button>
 
             {/* STAND */}
             <button
               onClick={() => handleAction('STAND')}
-              disabled={!!userAction}
-              className={`min-h-[50px] sm:min-h-[54px] px-3 py-2.5 rounded-2xl font-arcade font-bold text-xs sm:text-sm tracking-wide transition-all cursor-pointer shadow-md flex items-center justify-center gap-1.5 ${
+              disabled={!cardsDealt || !!userAction}
+              className={`min-h-[50px] sm:min-h-[54px] px-3 py-2.5 rounded-2xl font-arcade font-bold text-xs sm:text-sm tracking-wide transition-all shadow-md flex items-center justify-center gap-1.5 ${
                 userAction === 'STAND'
-                  ? 'bg-amber-400 text-slate-950 ring-2 ring-white scale-105'
+                  ? 'bg-amber-400 text-slate-950 ring-2 ring-white scale-105 shadow-amber-500/40 shadow-lg'
+                  : !cardsDealt
+                  ? 'bg-[#0B1711] text-slate-500 border border-emerald-950/80 cursor-not-allowed opacity-40 select-none'
                   : userAction
                   ? 'bg-[#101F18] text-slate-600 border border-slate-700/40 cursor-not-allowed opacity-50'
-                  : 'bg-gradient-to-r from-blue-600 to-indigo-700 hover:from-blue-500 hover:to-indigo-600 text-white active:scale-95'
+                  : 'bg-gradient-to-r from-blue-600 to-indigo-700 hover:from-blue-500 hover:to-indigo-600 text-white active:scale-95 cursor-pointer'
               }`}
             >
-              <Shield className="w-4 h-4 shrink-0 text-sky-300" />
+              <Shield className={`w-4 h-4 shrink-0 ${cardsDealt && !userAction ? 'text-sky-300' : 'text-slate-500'}`} />
               <span className="whitespace-nowrap">{t.stand}</span>
             </button>
 
             {/* DOUBLE */}
             <button
               onClick={() => handleAction('DOUBLE')}
-              disabled={!!userAction || (cardsDealt && playerHand.length > 2)}
-              className={`min-h-[50px] sm:min-h-[54px] px-3 py-2.5 rounded-2xl font-arcade font-bold text-xs sm:text-sm tracking-wide transition-all cursor-pointer shadow-md flex items-center justify-center gap-1.5 ${
+              disabled={!cardsDealt || !!userAction || (cardsDealt && playerHand.length > 2) || credits < activeHandBet}
+              className={`min-h-[50px] sm:min-h-[54px] px-3 py-2.5 rounded-2xl font-arcade font-bold text-xs sm:text-sm tracking-wide transition-all shadow-md flex items-center justify-center gap-1.5 ${
                 userAction === 'DOUBLE'
-                  ? 'bg-amber-400 text-slate-950 ring-2 ring-white scale-105'
-                  : userAction || (cardsDealt && playerHand.length > 2)
+                  ? 'bg-amber-400 text-slate-950 ring-2 ring-white scale-105 shadow-amber-500/40 shadow-lg'
+                  : !cardsDealt
+                  ? 'bg-[#0B1711] text-slate-500 border border-emerald-950/80 cursor-not-allowed opacity-40 select-none'
+                  : userAction || (cardsDealt && playerHand.length > 2) || credits < activeHandBet
                   ? 'bg-[#101F18] text-slate-600 border border-slate-700/40 cursor-not-allowed opacity-50'
-                  : 'bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-400 hover:to-orange-500 text-slate-950 active:scale-95'
+                  : 'bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-400 hover:to-orange-500 text-slate-950 active:scale-95 cursor-pointer'
               }`}
             >
-              <TrendingUp className="w-4 h-4 shrink-0 text-slate-950" />
+              <TrendingUp className={`w-4 h-4 shrink-0 ${cardsDealt && !userAction ? 'text-slate-950' : 'text-slate-500'}`} />
               <span className="whitespace-nowrap">{t.double}</span>
             </button>
 
             {/* SPLIT - Fully Functional & Accessible */}
             <button
               onClick={() => handleAction('SPLIT')}
-              disabled={!!userAction}
-              className={`min-h-[50px] sm:min-h-[54px] px-3 py-2.5 rounded-2xl font-arcade font-bold text-xs sm:text-sm tracking-wide transition-all cursor-pointer shadow-md flex items-center justify-center gap-1.5 ${
+              disabled={!cardsDealt || !!userAction}
+              className={`min-h-[50px] sm:min-h-[54px] px-3 py-2.5 rounded-2xl font-arcade font-bold text-xs sm:text-sm tracking-wide transition-all shadow-md flex items-center justify-center gap-1.5 ${
                 userAction === 'SPLIT'
-                  ? 'bg-amber-400 text-slate-950 ring-2 ring-white scale-105'
+                  ? 'bg-amber-400 text-slate-950 ring-2 ring-white scale-105 shadow-amber-500/40 shadow-lg'
+                  : !cardsDealt
+                  ? 'bg-[#0B1711] text-slate-500 border border-emerald-950/80 cursor-not-allowed opacity-40 select-none'
                   : userAction
                   ? 'bg-[#101F18] text-slate-600 border border-slate-700/40 cursor-not-allowed opacity-50'
-                  : 'bg-gradient-to-r from-purple-600 to-violet-700 hover:from-purple-500 hover:to-violet-600 text-white active:scale-95'
+                  : 'bg-gradient-to-r from-purple-600 to-violet-700 hover:from-purple-500 hover:to-violet-600 text-white active:scale-95 cursor-pointer'
               }`}
               title={isPairHand ? 'Split pair into two independent hands' : 'Split pair (requires matching cards)'}
             >
-              <Scissors className="w-4 h-4 shrink-0 text-purple-200" />
+              <Scissors className={`w-4 h-4 shrink-0 ${cardsDealt && !userAction ? 'text-purple-200' : 'text-slate-500'}`} />
               <span className="whitespace-nowrap">{t.split}</span>
             </button>
 
             {/* SURRENDER */}
             <button
               onClick={() => handleAction('SURRENDER')}
-              disabled={!!userAction || (cardsDealt && playerHand.length > 2)}
-              className={`col-span-2 sm:col-span-1 min-h-[50px] sm:min-h-[54px] px-3 py-2.5 rounded-2xl font-arcade font-bold text-xs sm:text-sm tracking-wide transition-all cursor-pointer shadow-md flex items-center justify-center gap-1.5 ${
+              disabled={!cardsDealt || !!userAction || (cardsDealt && playerHand.length > 2)}
+              className={`col-span-2 sm:col-span-1 min-h-[50px] sm:min-h-[54px] px-3 py-2.5 rounded-2xl font-arcade font-bold text-xs sm:text-sm tracking-wide transition-all shadow-md flex items-center justify-center gap-1.5 ${
                 userAction === 'SURRENDER'
-                  ? 'bg-amber-400 text-slate-950 ring-2 ring-white scale-105'
+                  ? 'bg-amber-400 text-slate-950 ring-2 ring-white scale-105 shadow-amber-500/40 shadow-lg'
+                  : !cardsDealt
+                  ? 'bg-[#0B1711] text-slate-500 border border-emerald-950/80 cursor-not-allowed opacity-40 select-none'
                   : userAction || (cardsDealt && playerHand.length > 2)
                   ? 'bg-[#101F18] text-slate-600 border border-slate-700/40 cursor-not-allowed opacity-50'
-                  : 'bg-[#1A2536] hover:bg-[#25354D] text-slate-200 border border-[#3A4E70] active:scale-95'
+                  : 'bg-[#1A2536] hover:bg-[#25354D] text-slate-200 border border-[#3A4E70] active:scale-95 cursor-pointer'
               }`}
             >
-              <Flag className="w-4 h-4 shrink-0 text-slate-300" />
+              <Flag className={`w-4 h-4 shrink-0 ${cardsDealt && !userAction ? 'text-slate-300' : 'text-slate-500'}`} />
               <span className="whitespace-nowrap">{t.surrender}</span>
             </button>
           </div>

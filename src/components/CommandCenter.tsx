@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useLanguage } from '../i18n/LanguageContext';
+import { CardCountingMasterclass } from './CardCountingMasterclass';
 import {
   AlertTriangle,
   ArrowRight,
@@ -536,6 +537,11 @@ export const CommandCenter: React.FC<CommandCenterProps> = ({
             </div>
           </div>
         </div>
+      </div>
+
+      {/* Hub Card Counting Academy Component with Full Explanation */}
+      <div className="pt-2">
+        <CardCountingMasterclass />
       </div>
     </div>
   );

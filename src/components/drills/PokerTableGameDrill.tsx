@@ -8,6 +8,8 @@ import {
 } from '../../utils/mathEngine';
 import { sounds } from '../../utils/soundEffects';
 import { CasinoChipStack } from '../CasinoChipStack';
+import { PlayingCard } from '../PlayingCard';
+import { useLanguage } from '../../i18n/LanguageContext';
 import {
   AlertCircle,
   Award,
@@ -116,6 +118,7 @@ export const PokerTableGameDrill: React.FC<PokerTableGameDrillProps> = ({
   onRecordMistake,
   onRecordEarning
 }) => {
+  const { language } = useLanguage();
   const [currentScenarioIdx, setCurrentScenarioIdx] = useState<number>(0);
   const activeScenario = POKER_SCENARIOS[currentScenarioIdx];
 
@@ -123,6 +126,7 @@ export const PokerTableGameDrill: React.FC<PokerTableGameDrillProps> = ({
   const [heroBetChips, setHeroBetChips] = useState<number>(0);
   const [activeHeroChipDenom, setActiveHeroChipDenom] = useState<number>(25);
   const [chipAnimState, setChipAnimState] = useState<'idle' | 'win' | 'burn'>('idle');
+  const [showZeroToHero, setShowZeroToHero] = useState<boolean>(false);
   const [isSimulating, setIsSimulating] = useState<boolean>(false);
   const [simProgress, setSimProgress] = useState<number>(0);
   const [simEquity, setSimEquity] = useState<number>(0);
@@ -308,6 +312,14 @@ export const PokerTableGameDrill: React.FC<PokerTableGameDrillProps> = ({
         </div>
 
         <div className="flex items-center gap-3 text-xs">
+          <button
+            type="button"
+            onClick={() => setShowZeroToHero(s => !s)}
+            className="px-2.5 py-1 rounded-lg bg-[#111C2E] hover:bg-[#182842] border border-amber-400/30 text-amber-300 font-arcade text-[10px] flex items-center gap-1 cursor-pointer transition-colors"
+          >
+            <Sparkles className="w-3 h-3 text-amber-400" />
+            <span>Zero to Hero Guide</span>
+          </button>
           <div>
             <span className="text-[10px] text-slate-400 font-arcade">POT ODDS:</span>
             <span className="font-mono-telemetry font-bold text-amber-300 ml-1">
@@ -322,6 +334,66 @@ export const PokerTableGameDrill: React.FC<PokerTableGameDrillProps> = ({
           </div>
         </div>
       </div>
+
+      {/* Zero to Hero Poker Explanation Drawer */}
+      {showZeroToHero && (
+        <div className="p-3.5 rounded-2xl bg-[#09101C] border border-amber-400/40 text-xs space-y-2.5 animate-fade-in shadow-xl text-slate-200">
+          <div className="flex items-center justify-between border-b border-[#1E2E48] pb-1.5">
+            <span className="font-arcade font-bold text-amber-300 flex items-center gap-1.5 uppercase text-xs">
+              <Sparkles className="w-3.5 h-3.5 text-amber-400" />
+              {language === 'ru'
+                ? 'Покер и шансы банка: От Новичка До Мастера GTO'
+                : language === 'he'
+                ? 'פוקר וסיכויי קופה: מדריך מאפס למקצוען'
+                : 'Poker & Pot Odds: Zero to Hero Demystified'}
+            </span>
+            <span className="text-[9px] px-1.5 py-0.5 rounded bg-purple-500/20 text-purple-300 font-mono-telemetry font-bold">
+              GTO AP PROTOCOL
+            </span>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 text-[11px] leading-relaxed">
+            <div className="p-2.5 rounded-xl bg-[#070D18] border border-[#1C2940] space-y-1">
+              <strong className="text-amber-300 font-arcade block">
+                {language === 'ru' ? '1. Шансы банка (Цена колла)' : language === 'he' ? '1. סיכויי קופה (מחיר השוואה)' : '1. Pot Odds (Price to Call)'}
+              </strong>
+              <p className="text-slate-300">
+                {language === 'ru'
+                  ? 'Формула: Ставка / (Банк + Ставка). Если в банке $100 и ставка $50, вы рискуете $50 ради выигрыша $150 (общий банк $200). Цена колла — ровно 25%.'
+                  : language === 'he'
+                  ? 'נוסחה: הימור / (קופה + הימור). אם בקופה 100$ והיריב שם 50$, אתה מסכן 50$ עבור קופה של 200$. המחיר הנדרש הוא 25%.'
+                  : 'Formula: Bet / (Pot + Bet). If the pot has $100 and villain bets $50, you must risk $50 to win $150 ($200 total pot). Your price to call is 25%.'}
+              </p>
+            </div>
+
+            <div className="p-2.5 rounded-xl bg-[#070D18] border border-[#1C2940] space-y-1">
+              <strong className="text-emerald-300 font-arcade block">
+                {language === 'ru' ? '2. Ауты и правило 2 и 4' : language === 'he' ? '2. אאוטים וכלל ה-2 וה-4' : '2. Outs & The Rule of 2 & 4'}
+              </strong>
+              <p className="text-slate-300">
+                {language === 'ru'
+                  ? 'Посчитайте победные карты (ауты). На флопе умножьте ауты на 4 (эквити к риверу). На терне умножьте на 2. Например: 9 аутов на флеш на терне × 2 ≈ 18% эквити.'
+                  : language === 'he'
+                  ? 'ספור אאוטים (קלפים מנצחים). בפלופ הכפל ב-4, בטרן הכפל ב-2. דוגמה: 9 אאוטים לצבע בטרן כפול 2 ≈ 18% איקוויטי.'
+                  : 'Count your winning unseen cards (Outs). On the Flop, multiply by 4 to get turn+river equity. On the Turn, multiply by 2. Example: 9 flush outs × 2 ≈ 18% equity.'}
+              </p>
+            </div>
+
+            <div className="p-2.5 rounded-xl bg-[#070D18] border border-[#1C2940] space-y-1">
+              <strong className="text-sky-300 font-arcade block">
+                {language === 'ru' ? '3. Золотое правило +EV колла' : language === 'he' ? '3. כלל הזהב להשוואה רווחית' : '3. The Golden +EV Call Rule'}
+              </strong>
+              <p className="text-slate-300">
+                {language === 'ru'
+                  ? 'Если Эквити руки ≥ Шансы банка, колл выгоден (+EV)! Если Эквити < Шансы банка, колл ведет к неизбежным потерям на дистанции.'
+                  : language === 'he'
+                  ? 'אם איקוויטי היד ≥ סיכויי הקופה, השוואה היא רווחית (+EV)! אם האיקוויטי נמוך מסיכויי הקופה, מדובר בדליפת בנקרוול.'
+                  : 'If Hand Equity ≥ Pot Odds, calling is mathematically profitable (+EV)! If Hand Equity < Pot Odds, calling is an EV leak that bleeds your bankroll over time.'}
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Oval Green Poker Table Felt */}
       <div className="rounded-3xl bg-gradient-to-b from-[#0B3322] via-[#072418] to-[#04150D] border-4 border-[#2A523A] p-5 sm:p-6 relative shadow-2xl overflow-hidden min-h-[360px] flex flex-col justify-between">
@@ -362,26 +434,14 @@ export const PokerTableGameDrill: React.FC<PokerTableGameDrillProps> = ({
             COMMUNITY BOARD
           </span>
           <div className="flex items-center gap-2 sm:gap-2.5">
-            {activeScenario.boardCards.map((card, idx) => {
-              const isRed = card.suit === 'h' || card.suit === 'd';
-              return (
-                <div
-                  key={idx}
-                  className="w-12 h-18 sm:w-14 sm:h-20 rounded-xl bg-white border-2 border-amber-300 flex flex-col justify-between p-1.5 font-bold font-mono shadow-xl animate-deal-card"
-                  style={{ animationDelay: `${idx * 0.08}s` }}
-                >
-                  <div className={`text-xs leading-none ${isRed ? 'text-red-600' : 'text-slate-950'}`}>
-                    {card.rank}
-                  </div>
-                  <div className={`text-base sm:text-xl self-center leading-none ${isRed ? 'text-red-600' : 'text-slate-950'}`}>
-                    {card.suit === 'h' ? '♥' : card.suit === 'd' ? '♦' : card.suit === 'c' ? '♣' : '♠'}
-                  </div>
-                  <div className={`text-xs leading-none self-end rotate-180 ${isRed ? 'text-red-600' : 'text-slate-950'}`}>
-                    {card.rank}
-                  </div>
-                </div>
-              );
-            })}
+            {activeScenario.boardCards.map((card, idx) => (
+              <PlayingCard
+                key={idx}
+                card={card}
+                size="sm"
+                className="animate-deal-card"
+              />
+            ))}
           </div>
         </div>
 
@@ -488,26 +548,14 @@ export const PokerTableGameDrill: React.FC<PokerTableGameDrillProps> = ({
             </span>
           </span>
           <div className="flex items-center gap-2.5">
-            {activeScenario.heroCards.map((card, idx) => {
-              const isRed = card.suit === 'h' || card.suit === 'd';
-              return (
-                <div
-                  key={idx}
-                  className="w-14 h-20 sm:w-16 sm:h-24 rounded-xl bg-white border-2 border-amber-300 flex flex-col justify-between p-2 font-bold font-mono shadow-xl animate-deal-card"
-                  style={{ animationDelay: `${0.3 + idx * 0.1}s` }}
-                >
-                  <div className={`text-xs sm:text-sm leading-none ${isRed ? 'text-red-600' : 'text-slate-950'}`}>
-                    {card.rank}
-                  </div>
-                  <div className={`text-lg sm:text-2xl self-center leading-none ${isRed ? 'text-red-600' : 'text-slate-950'}`}>
-                    {card.suit === 'h' ? '♥' : card.suit === 'd' ? '♦' : card.suit === 'c' ? '♣' : '♠'}
-                  </div>
-                  <div className={`text-xs sm:text-sm leading-none self-end rotate-180 ${isRed ? 'text-red-600' : 'text-slate-950'}`}>
-                    {card.rank}
-                  </div>
-                </div>
-              );
-            })}
+            {activeScenario.heroCards.map((card, idx) => (
+              <PlayingCard
+                key={idx}
+                card={card}
+                size="md"
+                className="animate-deal-card"
+              />
+            ))}
           </div>
         </div>
 

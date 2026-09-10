@@ -2,16 +2,20 @@ import React, { useState, useEffect, useRef } from 'react';
 import { computeMustHitByAdvantage } from '../../utils/mathEngine';
 import { sounds } from '../../utils/soundEffects';
 import { CasinoChipStack } from '../CasinoChipStack';
+import { useLanguage } from '../../i18n/LanguageContext';
 import {
   AlertCircle,
   Award,
+  BookOpen,
   CheckCircle2,
+  ChevronDown,
   ChevronRight,
   Coins,
   DollarSign,
   Flame,
   Grid,
   HelpCircle,
+  Info,
   Play,
   RotateCcw,
   Sparkles,
@@ -136,8 +140,10 @@ export const SlotMachineGameDrill: React.FC<SlotMachineGameDrillProps> = ({
   );
 
   // Live progressive meter & spin state
+  const { t, language } = useLanguage();
   const [currentMeter, setCurrentMeter] = useState<number>(activeScenario.currentMeter);
   const [isSpinning, setIsSpinning] = useState<boolean>(false);
+  const [showGameGuide, setShowGameGuide] = useState<boolean>(false);
   const [spinningCols, setSpinningCols] = useState<boolean[]>(
     Array(GRID_PRESETS[1].cols).fill(false)
   );
@@ -321,25 +327,35 @@ export const SlotMachineGameDrill: React.FC<SlotMachineGameDrillProps> = ({
     // Start all columns spinning
     setSpinningCols(Array(selectedGrid.cols).fill(true));
 
-    // Stagger column stops
-    const totalSpinTime = 600 + selectedGrid.cols * 120;
+    // Stagger column stops with realistic mechanical reel clunks
     const finalGrid = createInitialGrid(selectedGrid.rows, selectedGrid.cols);
+    const stopInterval = 200;
+    const initialDelay = 450;
+    const totalSpinTime = initialDelay + selectedGrid.cols * stopInterval + 60;
 
-    selectedGrid.cols;
     for (let c = 0; c < selectedGrid.cols; c++) {
       setTimeout(() => {
         sounds.playReelStop();
+        // Immediately reveal this column's landed symbols
+        setGrid(prevGrid => {
+          const nextGrid = prevGrid.map(row => [...row]);
+          for (let r = 0; r < selectedGrid.rows; r++) {
+            nextGrid[r][c] = finalGrid[r][c];
+          }
+          return nextGrid;
+        });
+
+        // Mark column as stopped
         setSpinningCols(prev => {
           const next = [...prev];
           next[c] = false;
           return next;
         });
-      }, 400 + c * 150);
+      }, initialDelay + c * stopInterval);
     }
 
-    // Conclude spin
+    // Conclude spin after final column has stopped
     setTimeout(() => {
-      setGrid(finalGrid);
       setIsSpinning(false);
 
       // Increment jackpot meter with coin-in contribution ($betSize * meterRate)
@@ -432,8 +448,17 @@ export const SlotMachineGameDrill: React.FC<SlotMachineGameDrillProps> = ({
           ))}
         </div>
 
-        {/* Radar Status Badge */}
+        {/* Radar Status Badge & Guide Button */}
         <div className="flex items-center gap-2">
+          <button
+            type="button"
+            onClick={() => setShowGameGuide(s => !s)}
+            className="flex items-center gap-1 px-2.5 py-1 rounded-lg bg-[#111C2E] hover:bg-[#182842] border border-amber-400/30 text-amber-300 font-arcade text-[10px] cursor-pointer transition-colors"
+          >
+            <Sparkles className="w-3 h-3 text-amber-400" />
+            <span>Zero to Hero Guide</span>
+          </button>
+
           <span
             className={`text-xs font-mono-telemetry font-bold px-2 py-0.5 rounded border ${
               advantageMath.isPositiveEV
@@ -445,6 +470,66 @@ export const SlotMachineGameDrill: React.FC<SlotMachineGameDrillProps> = ({
           </span>
         </div>
       </div>
+
+      {/* Multilingual Zero to Hero Slot Explainer Drawer */}
+      {showGameGuide && (
+        <div className="p-3.5 rounded-2xl bg-[#09101C] border border-amber-400/40 text-xs space-y-2.5 animate-fade-in shadow-xl text-slate-200">
+          <div className="flex items-center justify-between border-b border-[#1E2E48] pb-1.5">
+            <span className="font-arcade font-bold text-amber-300 flex items-center gap-1.5 uppercase text-xs">
+              <Sparkles className="w-3.5 h-3.5 text-amber-400" />
+              {language === 'ru'
+                ? 'Слоты Must-Hit-By: От Новичка До Профессионала'
+                : language === 'he'
+                ? 'מכונות Must-Hit-By: מדריך מאפס למקצוען'
+                : 'Must-Hit-By Progressive Slots: Zero to Hero Demystified'}
+            </span>
+            <span className="text-[9px] px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-300 font-mono-telemetry font-bold">
+              PROGRESSIVE AP RADAR
+            </span>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 text-[11px] leading-relaxed">
+            <div className="p-2.5 rounded-xl bg-[#070D18] border border-[#1C2940] space-y-1">
+              <strong className="text-amber-300 font-arcade block">
+                {language === 'ru' ? '1. Как работает потолок (Cap)' : language === 'he' ? '1. תקרת החובה (Cap)' : '1. The Must-Hit-By Cap'}
+              </strong>
+              <p className="text-slate-300">
+                {language === 'ru'
+                  ? 'Обычные слоты имеют отрицательный RTP (88-92%). Но автоматы Must-Hit-By ОБЯЗАНЫ выплатить джекпот до достижения потолка (например, $500). С каждым спином 2-4% от ставки идет в прогрессивный счетчик.'
+                  : language === 'he'
+                  ? 'מכונות רגילות מחזירות רק 88%-92% (RTP). אך מכונות Must-Hit-By מחויבות לחלק את הג\'קפוט לפני התקרה (למשל 500$). 2%-4% מכל הימור מתווספים למד.'
+                  : 'Standard slots have an unbeatable 88-92% RTP. But Must-Hit-By slots MUST award the jackpot before reaching the cap (e.g. $500). 2-4% of every bet adds to the progressive meter.'}
+              </p>
+            </div>
+
+            <div className="p-2.5 rounded-xl bg-[#070D18] border border-[#1C2940] space-y-1">
+              <strong className="text-emerald-300 font-arcade block">
+                {language === 'ru' ? '2. Порог безубыточности (+EV)' : language === 'he' ? '2. סף הרווחיות (+EV)' : '2. The +EV Break-Even Point'}
+              </strong>
+              <p className="text-slate-300">
+                {language === 'ru'
+                  ? 'ГСЧ тайком выбирает число между минимумом и потолком. Когда счетчик приближается к потолку, ожидаемый джекпот превышает стоимость монет на его выбивание, создавая математический перевес игрока (+EV)!'
+                  : language === 'he'
+                  ? 'ה-RNG מגריל מספר סודי עד לתקרה. כשהמד קרוב לתקרה, שווי הזכייה הצפוי גבוה בהרבה מהעלות של הסיבובים, ונוצר יתרון מתמטי מובהק לשחקן (+EV)!'
+                  : 'The RNG secretly chooses a number before the cap. When the meter climbs close to the ceiling, the jackpot value exceeds the expected coin-in cost to trigger it, creating a positive mathematical advantage (+EV)!'}
+              </p>
+            </div>
+
+            <div className="p-2.5 rounded-xl bg-[#070D18] border border-[#1C2940] space-y-1">
+              <strong className="text-sky-300 font-arcade block">
+                {language === 'ru' ? '3. Тактика скаутинга (Play/Pass)' : language === 'he' ? '3. כלל הסריקה בקזינו' : '3. Floor Scouting Rule'}
+              </strong>
+              <p className="text-slate-300">
+                {language === 'ru'
+                  ? 'Для потолка $500 порог составляет ~$470. Если счетчик ниже $470 — уходите (WALK AWAY). Если счетчик $475+, атакуйте (ATTACK) на максимальных допустимых линиях!'
+                  : language === 'he'
+                  ? 'עבור תקרה של 500$, סף הכדאיות הוא כ-470$. אם המד נמוך מ-470$ - התרחק (WALK AWAY). אם המד מעל 475$ - שחק מיד (ATTACK) על כל הקווים!'
+                  : 'On a $500 cap machine, break-even is roughly $470. If the meter is below $470, walk away! If it sits at $475+, attack immediately with max lines until the jackpot hits!'}
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Arcade Slot Machine Cabinet */}
       <div className="rounded-3xl bg-gradient-to-b from-[#131A2B] via-[#0E1524] to-[#080D18] border-4 border-[#2A3B58] p-4 sm:p-5 relative shadow-2xl overflow-hidden space-y-3">
@@ -518,8 +603,51 @@ export const SlotMachineGameDrill: React.FC<SlotMachineGameDrillProps> = ({
             <span>
               FORMAT: <strong>{selectedGrid.cols} REELS × {selectedGrid.rows} ROWS</strong>
             </span>
-            <span>ACTIVE PAYLINES: {selectedGrid.paylines}</span>
+            <div className="flex items-center gap-2">
+              <button
+                type="button"
+                onClick={() => setShowGameGuide(g => !g)}
+                className="px-2 py-0.5 rounded-lg bg-[#111B2C] hover:bg-[#1C2C46] border border-[#25395A] text-amber-300 text-[10px] font-arcade flex items-center gap-1 cursor-pointer transition-colors"
+              >
+                <BookOpen className="w-3 h-3 text-amber-400" />
+                <span>Zero to Hero Guide</span>
+                <ChevronDown className={`w-3 h-3 transition-transform ${showGameGuide ? 'rotate-180' : ''}`} />
+              </button>
+              <span>ACTIVE PAYLINES: {selectedGrid.paylines}</span>
+            </div>
           </div>
+
+          {/* Zero to Hero Slot Mechanics Guide */}
+          {showGameGuide && (
+            <div className="p-3.5 rounded-xl bg-[#09101C] border border-amber-400/40 text-xs space-y-2.5 animate-fade-in text-slate-200">
+              <div className="flex items-center justify-between border-b border-[#1E2E48] pb-1.5">
+                <span className="font-arcade font-bold text-amber-300 flex items-center gap-1.5 uppercase text-xs">
+                  <Sparkles className="w-3.5 h-3.5 text-amber-400" />
+                  Must-Hit-By Slots (Zero to Hero)
+                </span>
+                <span className="text-[9px] px-1.5 py-0.5 rounded bg-amber-400/20 text-amber-300 font-mono-telemetry font-bold">
+                  AP PROTOCOL
+                </span>
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-[11px] leading-relaxed">
+                <div className="p-2.5 rounded-lg bg-[#060B14] border border-[#1B293E] space-y-1">
+                  <strong className="text-amber-300 font-arcade block">1. The Secret Trigger Number</strong>
+                  <p className="text-slate-300">
+                    When the jackpot resets, the RNG secretly selects a jackpot target between base and Cap (e.g. $500). Every bet adds a percentage (meter rate, e.g. 2%). The player whose coin-in triggers the secret target wins!
+                  </p>
+                </div>
+                <div className="p-2.5 rounded-lg bg-[#060B14] border border-[#1B293E] space-y-1">
+                  <strong className="text-emerald-300 font-arcade block">2. When It Becomes +EV (Positive EV)</strong>
+                  <p className="text-slate-300">
+                    As meter approaches the Cap, the distance ΔJ shrinks. Because the jackpot MUST hit before or at the Cap, the expected jackpot payout outweighs the expected base-game house edge losses!
+                  </p>
+                </div>
+              </div>
+              <div className="p-2 rounded-lg bg-black/40 border border-white/10 font-mono-telemetry text-[10px] text-amber-200 text-center">
+                Break-Even Point: Jb = Cap - [Cap × (1 - Base RTP)] / (2 × Meter Rate)
+              </div>
+            </div>
+          )}
 
           <div
             className="grid gap-2 select-none"
@@ -527,34 +655,46 @@ export const SlotMachineGameDrill: React.FC<SlotMachineGameDrillProps> = ({
               gridTemplateColumns: `repeat(${selectedGrid.cols}, minmax(0, 1fr))`
             }}
           >
-            {Array.from({ length: selectedGrid.cols }).map((_, colIdx) => (
-              <div key={colIdx} className="space-y-2">
-                {Array.from({ length: selectedGrid.rows }).map((_, rowIdx) => {
-                  const symbol = grid[rowIdx]?.[colIdx] || '💎';
-                  const isCellWinning = winningCells.some(
-                    ([r, c]) => r === rowIdx && c === colIdx
-                  );
-                  const isColSpinning = spinningCols[colIdx];
+            {Array.from({ length: selectedGrid.cols }).map((_, colIdx) => {
+              const isColSpinning = spinningCols[colIdx];
+              return (
+                <div key={colIdx} className="space-y-2 overflow-hidden rounded-xl">
+                  {Array.from({ length: selectedGrid.rows }).map((_, rowIdx) => {
+                    const symbol = grid[rowIdx]?.[colIdx] || '💎';
+                    const isCellWinning = winningCells.some(
+                      ([r, c]) => r === rowIdx && c === colIdx
+                    );
 
-                  return (
-                    <div
-                      key={rowIdx}
-                      className={`h-14 sm:h-18 rounded-xl flex items-center justify-center text-2xl sm:text-3xl border-2 transition-all shadow-md ${
-                        isColSpinning
-                          ? 'bg-[#151D2D] border-[#2F4060] animate-pulse filter blur-xs'
-                          : isCellWinning
-                          ? 'bg-gradient-to-b from-amber-500/30 to-emerald-500/30 border-amber-400 ring-2 ring-amber-300 scale-105 shadow-amber-500/40'
-                          : 'bg-gradient-to-b from-[#182234] via-[#101726] to-[#0A101C] border-[#2A3B56] text-white'
-                      }`}
-                    >
-                      <span className={isColSpinning ? 'animate-slot-spin' : ''}>
-                        {symbol}
-                      </span>
-                    </div>
-                  );
-                })}
-              </div>
-            ))}
+                    return (
+                      <div
+                        key={rowIdx}
+                        className={`h-14 sm:h-18 rounded-xl flex items-center justify-center text-2xl sm:text-3xl border-2 transition-all shadow-md relative overflow-hidden ${
+                          isColSpinning
+                            ? 'bg-[#101726] border-[#3B4E70] shadow-inner'
+                            : isCellWinning
+                            ? 'bg-gradient-to-b from-amber-500/30 to-emerald-500/30 border-amber-400 ring-2 ring-amber-300 scale-105 shadow-amber-500/40 animate-reel-stop'
+                            : 'bg-gradient-to-b from-[#182234] via-[#101726] to-[#0A101C] border-[#2A3B56] text-white animate-reel-stop'
+                        }`}
+                      >
+                        {isColSpinning ? (
+                          <div className="flex flex-col items-center animate-reel-roll select-none pointer-events-none">
+                            <span className="text-2xl opacity-70">💎</span>
+                            <span className="text-2xl my-1">7️⃣</span>
+                            <span className="text-2xl opacity-80">👑</span>
+                            <span className="text-2xl my-1">⭐</span>
+                            <span className="text-2xl opacity-70">🔔</span>
+                          </div>
+                        ) : (
+                          <span className="drop-shadow-sm select-none">
+                            {symbol}
+                          </span>
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
+              );
+            })}
           </div>
 
           {/* Win / Spin Status readout */}

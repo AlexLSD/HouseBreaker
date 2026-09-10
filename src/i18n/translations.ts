@@ -13,12 +13,16 @@ export interface Translations {
 
   // Tabs / Navigation
   navHub: string;
+  navBlackjack: string;
   navRoulette: string;
   navSlots: string;
   navPoker: string;
   navKelly: string;
   navDrills: string;
   navProfile: string;
+  howToPlay: string;
+  btnHowToPlay: string;
+  rulesAndMath: string;
 
   // Command Center / Hub
   arcadeTitle: string;
@@ -204,6 +208,19 @@ export interface Translations {
   badgesTitle: string;
   timeFilterAll: string;
   timeFilterRecent: string;
+  financialLedger: string;
+  statTotalWonLedger: string;
+  statTotalLostLedger: string;
+  profitFactorLabel: string;
+  scoreLabel: string;
+  winRateLabel: string;
+  accuracyLabel: string;
+  roundsLabel: string;
+  unlockedBadge: string;
+  startDrillCTA: string;
+  inspectTelemetry: string;
+  selectedPoint: string;
+  authenticDataNotice: string;
 
   // Language selector
   language: string;
@@ -260,7 +277,6 @@ export interface Translations {
   slotsRadarEdge: string;
   playNowAdvantage: string;
   walkAwayNegative: string;
-  currentMeter: string;
   mustHitDistance: string;
   breakevenPoint: string;
   expectedNetEdge: string;
@@ -295,6 +311,20 @@ export interface Translations {
   betSizeHeader: string;
   unitsHeader: string;
   floorActionHeader: string;
+
+  // Onboarding & Zero to Hero
+  alphaBadge: string;
+  onboardingTitle: string;
+  onboardingSubtitle: string;
+  nicknameLabel: string;
+  nicknamePlaceholder: string;
+  defaultLanguageLabel: string;
+  startExploringBtn: string;
+  editProfileBtn: string;
+  zeroToHeroGuide: string;
+  howItWorks: string;
+  kellyDeepDive: string;
+  hiloDeepDive: string;
 }
 
 export const translations: Record<Language, Translations> = {
@@ -309,12 +339,16 @@ export const translations: Record<Language, Translations> = {
     apEdge: '+1.85% AP EDGE',
 
     navHub: 'Hub',
+    navBlackjack: 'Blackjack',
     navRoulette: 'Roulette',
     navSlots: 'Slots',
     navPoker: 'Poker',
     navKelly: 'Kelly',
     navDrills: 'Drills',
     navProfile: 'Profile',
+    howToPlay: 'How to Play',
+    btnHowToPlay: 'How to Play & Guide',
+    rulesAndMath: 'Rules & Advantage Math',
 
     arcadeTitle: 'CASINO ADVANTAGE ARCADE',
     arcadeBadge: 'ACTIVE ADVANTAGE READY',
@@ -555,7 +589,6 @@ export const translations: Record<Language, Translations> = {
     slotsRadarEdge: 'CASINO FLOOR MUST-HIT-BY ADVANTAGE RADAR',
     playNowAdvantage: '★ PLAY NOW (+EV POSITIVE EDGE)',
     walkAwayNegative: 'WALK AWAY (-EV SUB-THRESHOLD)',
-    currentMeter: 'Current Meter',
     mustHitDistance: 'Must-Hit Distance',
     breakevenPoint: 'Breakeven Point',
     expectedNetEdge: 'EXPECTED NET EDGE',
@@ -589,7 +622,20 @@ export const translations: Record<Language, Translations> = {
     playerAdvantageHeader: 'PLAYER ADVANTAGE',
     betSizeHeader: 'BET SIZE ($)',
     unitsHeader: 'UNITS',
-    floorActionHeader: 'FLOOR ACTION'
+    floorActionHeader: 'FLOOR ACTION',
+
+    alphaBadge: 'alpha',
+    onboardingTitle: 'Welcome to HouseBreaker',
+    onboardingSubtitle: 'Configure your tactical advantage profile and language preferences.',
+    nicknameLabel: 'Callsign / Operator Nickname',
+    nicknamePlaceholder: 'e.g. EdgeMaster, BlackjackAce',
+    defaultLanguageLabel: 'Default Language',
+    startExploringBtn: 'Initialize HouseBreaker',
+    editProfileBtn: 'Edit Profile',
+    zeroToHeroGuide: 'Zero to Hero Guide',
+    howItWorks: 'How the Game Works',
+    kellyDeepDive: 'Kelly Criterion Explained Simply',
+    hiloDeepDive: 'Hi-Lo Card Counting Explained'
   },
   ru: {
     appName: 'ХАУСБРЕЙКЕР',
@@ -602,12 +648,16 @@ export const translations: Record<Language, Translations> = {
     apEdge: '+1.85% ПРЕИМУЩЕСТВО',
 
     navHub: 'Центр',
+    navBlackjack: 'Блэкджек',
     navRoulette: 'Рулетка',
     navSlots: 'Слоты',
     navPoker: 'Покер',
     navKelly: 'Келли',
     navDrills: 'Тренировки',
     navProfile: 'Профиль',
+    howToPlay: 'Как играть',
+    btnHowToPlay: 'Как играть и руководство',
+    rulesAndMath: 'Правила и математика преимущества',
 
     arcadeTitle: 'АРКАДА ПРЕИМУЩЕСТВА КАЗИНО',
     arcadeBadge: 'МАТЕМАТИЧЕСКОЕ ПРЕИМУЩЕСТВО',
@@ -848,7 +898,6 @@ export const translations: Record<Language, Translations> = {
     slotsRadarEdge: 'РАДАР ПРЕИМУЩЕСТВА В СЛОТАХ MUST-HIT-BY',
     playNowAdvantage: '★ ИГРАЙТЕ СЕЙЧАС (+EV ПЕРЕВЕС)',
     walkAwayNegative: 'УХОДИТЕ (-EV НИЖЕ ПОРОГА)',
-    currentMeter: 'Текущий джекпот',
     mustHitDistance: 'Дистанция до порога',
     breakevenPoint: 'Точка безубыточности',
     expectedNetEdge: 'ОЖИДАЕМЫЙ ПЕРЕВЕС',
@@ -882,7 +931,20 @@ export const translations: Record<Language, Translations> = {
     playerAdvantageHeader: 'ПРЕИМУЩЕСТВО ИГРОКА',
     betSizeHeader: 'РАЗМЕР СТАВКИ ($)',
     unitsHeader: 'ЕДИНИЦЫ',
-    floorActionHeader: 'ДЕЙСТВИЕ ЗА СТОЛОМ'
+    floorActionHeader: 'ДЕЙСТВИЕ ЗА СТОЛОМ',
+
+    alphaBadge: 'альфа',
+    onboardingTitle: 'Добро пожаловать в HouseBreaker',
+    onboardingSubtitle: 'Настройте свой тактический профиль и языковые предпочтения.',
+    nicknameLabel: 'Позывной / Никнейм оператора',
+    nicknamePlaceholder: 'напр. EdgeMaster, BlackjackAce',
+    defaultLanguageLabel: 'Язык по умолчанию',
+    startExploringBtn: 'Запустить HouseBreaker',
+    editProfileBtn: 'Редактировать профиль',
+    zeroToHeroGuide: 'Гид: От Нуля до Профи',
+    howItWorks: 'Как работает игра',
+    kellyDeepDive: 'Критерий Келли: простое объяснение',
+    hiloDeepDive: 'Подсчет карт Hi-Lo с нуля'
   },
   he: {
     appName: 'האוס-ברייקר',
@@ -895,12 +957,16 @@ export const translations: Record<Language, Translations> = {
     apEdge: '+1.85% יתרון סטטיסטי',
 
     navHub: 'ראשי',
+    navBlackjack: 'בלאק ג\'ק',
     navRoulette: 'רולטה',
     navSlots: 'מכונות',
     navPoker: 'פוקר',
     navKelly: 'קלי',
     navDrills: 'אימונים',
     navProfile: 'פרופיל',
+    howToPlay: 'איך לשחק',
+    btnHowToPlay: 'איך לשחק ומדריך',
+    rulesAndMath: 'כללים ומתמטיקת יתרון',
 
     arcadeTitle: 'ארקייד יתרון סטטיסטי בקזינו',
     arcadeBadge: 'יתרון מתמטי מוכן',
@@ -1141,7 +1207,6 @@ export const translations: Record<Language, Translations> = {
     slotsRadarEdge: 'מכ"ם יתרון סטטיסטי Must-Hit-By',
     playNowAdvantage: '★ שחק עכשיו (+EV יתרון חיובי)',
     walkAwayNegative: 'התרחק (-EV מתחת לסף)',
-    currentMeter: 'מד נוכחי',
     mustHitDistance: 'מרחק לסף הזכייה',
     breakevenPoint: 'נקודת איזון',
     expectedNetEdge: 'יתרון נקי צפוי',
@@ -1175,6 +1240,19 @@ export const translations: Record<Language, Translations> = {
     playerAdvantageHeader: 'יתרון השחקן',
     betSizeHeader: 'גודל הימור ($)',
     unitsHeader: 'יחידות',
-    floorActionHeader: 'פעולה בשולחן'
+    floorActionHeader: 'פעולה בשולחן',
+
+    alphaBadge: 'אלפא',
+    onboardingTitle: 'ברוכים הבאים ל-HouseBreaker',
+    onboardingSubtitle: 'הגדר את פרופיל היתרון הטקטי שלך והעדפות השפה.',
+    nicknameLabel: 'כינוי מפעיל',
+    nicknamePlaceholder: 'למשל: EdgeMaster, BlackjackAce',
+    defaultLanguageLabel: 'שפת ברירת מחדל',
+    startExploringBtn: 'הפעל את HouseBreaker',
+    editProfileBtn: 'ערוך פרופיל',
+    zeroToHeroGuide: 'מדריך: מאפס למקצוען',
+    howItWorks: 'איך המשחק עובד',
+    kellyDeepDive: 'הסבר פשוט על נוסחת קלי',
+    hiloDeepDive: 'הסבר על ספירת קלפים היי-לו'
   }
 };

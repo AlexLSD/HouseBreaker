@@ -40,6 +40,9 @@ export interface GameProficiency {
 }
 
 export interface UserProfileData {
+  nickname: string;
+  onboardingCompleted: boolean;
+  preferredLanguage?: string;
   createdAt: number;
   lastActive: number;
   initialBankroll: number;
@@ -62,6 +65,8 @@ const STORAGE_KEY = 'housebreaker_user_profile_v2';
 const createInitialProfile = (): UserProfileData => {
   const now = Date.now();
   return {
+    nickname: '',
+    onboardingCompleted: false,
     createdAt: now,
     lastActive: now,
     initialBankroll: 2500,
@@ -79,6 +84,17 @@ const createInitialProfile = (): UserProfileData => {
   };
 };
 
+export function updateUserNickname(nickname: string, lang?: string): UserProfileData {
+  const profile = loadUserProfile();
+  profile.nickname = nickname.trim() || 'Player 1';
+  profile.onboardingCompleted = true;
+  if (lang) {
+    profile.preferredLanguage = lang;
+  }
+  saveUserProfile(profile);
+  return profile;
+}
+
 export function loadUserProfile(): UserProfileData {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
@@ -93,13 +109,21 @@ export function loadUserProfile(): UserProfileData {
           (m: ProfileMistakeRecord) => m && m.id && !m.id.startsWith('mistake-init-')
         );
 
-        // If history contained mock entries, recalculate genuine metrics
+        // If history contained mock entries, recalculate genuine metrics without destroying user identity
         if (cleanedHistory.length === 0) {
           const fresh = createInitialProfile();
+          fresh.nickname = typeof parsed.nickname === 'string' ? parsed.nickname : '';
+          fresh.onboardingCompleted = Boolean(parsed.onboardingCompleted);
+          fresh.preferredLanguage = parsed.preferredLanguage || 'en';
+          fresh.initialBankroll = typeof parsed.initialBankroll === 'number' && parsed.initialBankroll > 0 ? parsed.initialBankroll : 2500;
+          fresh.currentBankroll = fresh.initialBankroll;
           saveUserProfile(fresh);
           return fresh;
         }
 
+        parsed.nickname = typeof parsed.nickname === 'string' ? parsed.nickname : '';
+        parsed.onboardingCompleted = Boolean(parsed.onboardingCompleted);
+        parsed.preferredLanguage = parsed.preferredLanguage || 'en';
         parsed.history = cleanedHistory;
         parsed.mistakes = cleanedMistakes;
         return parsed;
@@ -199,6 +223,9 @@ export function recordProfileMistake(
 
 export function clearUserProfile(): UserProfileData {
   const fresh: UserProfileData = {
+    nickname: 'HouseBreakerPro',
+    onboardingCompleted: true,
+    preferredLanguage: 'en',
     createdAt: Date.now(),
     lastActive: Date.now(),
     initialBankroll: 2500,
